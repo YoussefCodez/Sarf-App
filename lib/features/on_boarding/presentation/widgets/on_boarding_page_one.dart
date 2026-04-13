@@ -133,7 +133,7 @@ class _OnBoardingPageOneState extends State<OnBoardingPageOne> {
                       ref.read(pageViewProvider.notifier).handleIntent(NextPageIntent());
                     },
                     child: Text(
-                      "Get Started",
+                      OnBoardingStrings.getStarted,
                       style: Theme.of(context).textTheme.labelMedium,
                     ),
                   ).animate().fadeIn(duration: Duration(milliseconds: 600));

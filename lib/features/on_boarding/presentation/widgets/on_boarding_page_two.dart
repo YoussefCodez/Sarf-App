@@ -16,7 +16,7 @@ class OnBoardingPageTwo extends ConsumerWidget {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),
       child: step == WhyTrackingStep.addGoal
-          ? const AddGoal()
+          ? AddGoal()
           : WhyTracking(
               onContinue: () {
                 ref

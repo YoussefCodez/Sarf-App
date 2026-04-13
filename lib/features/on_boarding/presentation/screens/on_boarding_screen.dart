@@ -1,5 +1,6 @@
 import 'package:finance_tracking/features/on_boarding/presentation/view_models/providers/page_view_provider.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/widgets/on_boarding_page_one.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/widgets/on_boarding_page_three.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/widgets/on_boarding_page_two.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,7 +26,7 @@ class OnBoardingScreen extends StatelessWidget {
               children: [
                 OnBoardingPageOne(),
                 OnBoardingPageTwo(),
-                Center(child: Text('Page Three')),
+                OnBoardingPageThree(),
               ],
             );
           },

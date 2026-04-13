@@ -9,7 +9,10 @@ class WhyTrackingState {
     this.step = WhyTrackingStep.initial,
   });
 
-  WhyTrackingState copyWith({bool? isSavingForGoal, WhyTrackingStep? step}) {
+  WhyTrackingState copyWith({
+    bool? isSavingForGoal,
+    WhyTrackingStep? step,
+  }) {
     return WhyTrackingState(
       isSavingForGoal: isSavingForGoal ?? this.isSavingForGoal,
       step: step ?? this.step,
