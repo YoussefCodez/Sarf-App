@@ -1,13 +1,17 @@
+import 'package:finance_tracking/app_routes.dart';
 import 'package:finance_tracking/core/app_assets/app_svgs.dart';
 import 'package:finance_tracking/core/app_strings/on_boarding_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view_models/intents/end_on_boarding_intent.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/view_models/intents/money_tracking_intnet.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view_models/providers/end_on_boarding_provider.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/view_models/providers/week_money_tracking_provider.dart';
-import 'package:finance_tracking/features/on_boarding/presentation/widgets/on_boarding_card.dart';
+import 'package:finance_tracking/core/widgets/info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 class OnBoardingPageThree extends StatelessWidget {
   const OnBoardingPageThree({super.key});
@@ -42,7 +46,9 @@ class OnBoardingPageThree extends StatelessWidget {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: weekMoneyTracking.toStringAsFixed(0),
+                            text: weekMoneyTracking == 5000
+                                ? "5000+"
+                                : weekMoneyTracking.toStringAsFixed(0),
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
                                   color: AppColors.primaryColor,
@@ -130,7 +136,7 @@ class OnBoardingPageThree extends StatelessWidget {
             ),
           ),
           Gap(16.h),
-          OnBoardingCard(
+          InfoCard(
             title: OnBoardingStrings.privacyWarningTitle,
             subTitle: OnBoardingStrings.privacyWarningSubtitle,
             svgPath: AppSvgs.badge,
@@ -145,6 +151,10 @@ class OnBoardingPageThree extends StatelessWidget {
                   ref
                       .read(weekMoneyTrackingNotifierProvider.notifier)
                       .handleIntent(MoneyTrackingIntentFinish());
+                  ref
+                      .read(endOnBoardingProvider.notifier)
+                      .handleIntent(EndOnBoardingSuccessIntent(true));
+                  context.go(AppRoutes.signUpScreen);
                 },
                 child: Text(
                   OnBoardingStrings.finishButton,

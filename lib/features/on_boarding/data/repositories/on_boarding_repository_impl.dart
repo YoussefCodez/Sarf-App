@@ -17,4 +17,9 @@ class OnBoardingRepositoryImpl implements OnBoardingRepository {
   Future<void> saveWeeklySpending(double value) async {
     await _localDataSource.saveWeeklySpending(value);
   }
+
+  @override
+  Future<void> saveEndOnBoarding(bool value) async {
+    await _localDataSource.saveEndOnBoarding(value);
+  }
 }

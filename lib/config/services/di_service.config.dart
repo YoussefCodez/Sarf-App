@@ -27,11 +27,13 @@ import '../../features/on_boarding/domain/repositories/on_boarding_repository.da
     as _i874;
 import '../../features/on_boarding/domain/usecases/add_goal_usecase.dart'
     as _i394;
+import '../../features/on_boarding/domain/usecases/save_end_on_boarding_usecase.dart'
+    as _i102;
 import '../../features/on_boarding/domain/usecases/save_tracking_reason_usecase.dart'
     as _i631;
 import '../../features/on_boarding/domain/usecases/save_weekly_spending_usecase.dart'
     as _i1060;
-import 'hive_module.dart' as _i576;
+import '../modules/hive_module.dart' as _i732;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -52,6 +54,9 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i644.OnBoardingRepositoryImpl(gh<_i903.OnBoardingLocalDataSource>()),
     );
+    gh.lazySingleton<_i102.SaveEndOnBoardingUseCase>(
+      () => _i102.SaveEndOnBoardingUseCase(gh<_i874.OnBoardingRepository>()),
+    );
     gh.lazySingleton<_i631.SaveTrackingReasonUseCase>(
       () => _i631.SaveTrackingReasonUseCase(gh<_i874.OnBoardingRepository>()),
     );
@@ -68,4 +73,4 @@ extension GetItInjectableX on _i174.GetIt {
   }
 }
 
-class _$HiveModule extends _i576.HiveModule {}
+class _$HiveModule extends _i732.HiveModule {}

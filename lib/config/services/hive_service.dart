@@ -9,7 +9,7 @@ class HiveService {
     // Register adapters
     Hive.registerAdapter(GoalModelAdapter());
     
-    // You can add logic to open static boxes here if needed
-    // await Hive.openBox('settings');
+    // Open static boxes
+    await Hive.openBox('settings_box');
   }
 }

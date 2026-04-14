@@ -11,7 +11,7 @@ abstract class AppTheme {
       bodyMedium: TextStyle(
         fontWeight: .bold,
         fontSize: 28.sp,
-        color: AppColors.whiteColor
+        color: AppColors.whiteColor,
       ),
       bodySmall: TextStyle(
         fontWeight: .w500,
@@ -21,8 +21,13 @@ abstract class AppTheme {
       labelMedium: TextStyle(
         fontSize: 18.sp,
         color: AppColors.darkGreen,
-        fontWeight: .bold
-      )
+        fontWeight: .bold,
+      ),
+      labelSmall: TextStyle(
+        fontSize: 16.sp,
+        color: AppColors.primaryColor,
+        fontWeight: FontWeight.w500,
+      ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -49,6 +54,6 @@ abstract class AppTheme {
         borderRadius: BorderRadius.circular(12.r),
         borderSide: BorderSide(color: Colors.transparent),
       ),
-    )
+    ),
   );
 }

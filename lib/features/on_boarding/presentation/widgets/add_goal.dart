@@ -78,11 +78,7 @@ class _AddGoalState extends ConsumerState<AddGoal> {
                       }
                       return null;
                     },
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: Theme.of(context).textTheme.labelSmall,
                     decoration: InputDecoration(
                       hintText: OnBoardingStrings.goalNameHint,
                       hintStyle: Theme.of(

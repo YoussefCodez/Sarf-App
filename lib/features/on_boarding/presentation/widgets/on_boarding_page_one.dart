@@ -3,7 +3,7 @@ import 'package:finance_tracking/core/app_strings/on_boarding_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/view_models/intents/page_view_intent.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/view_models/providers/page_view_provider.dart';
-import 'package:finance_tracking/features/on_boarding/presentation/widgets/on_boarding_card.dart';
+import 'package:finance_tracking/core/widgets/info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,7 +67,7 @@ class _OnBoardingPageOneState extends State<OnBoardingPageOne> {
                 ),
             if (_isFirstCardVisible) ...[
               Gap(20.h),
-              OnBoardingCard(
+              InfoCard(
                     title: OnBoardingStrings.cardOneTitle,
                     subTitle: OnBoardingStrings.cardOneSubTitle,
                     svgPath: AppSvgs.privacy,
@@ -84,7 +84,7 @@ class _OnBoardingPageOneState extends State<OnBoardingPageOne> {
             ],
             if (_isSecondCardVisible) ...[
               Gap(10.h),
-              OnBoardingCard(
+              InfoCard(
                     title: OnBoardingStrings.cardTwoTitle,
                     subTitle: OnBoardingStrings.cardTwoSubTitle,
                     svgPath: AppSvgs.lamp,
@@ -107,7 +107,7 @@ class _OnBoardingPageOneState extends State<OnBoardingPageOne> {
             ],
             if (_isThirdCardVisible) ...[
               Gap(10.h),
-              OnBoardingCard(
+              InfoCard(
                     title: OnBoardingStrings.cardThreeTitle,
                     subTitle: OnBoardingStrings.cardThreeSubTitle,
                     svgPath: AppSvgs.badge,
@@ -130,7 +130,9 @@ class _OnBoardingPageOneState extends State<OnBoardingPageOne> {
                 builder: (context, ref, child) {
                   return ElevatedButton(
                     onPressed: () {
-                      ref.read(pageViewProvider.notifier).handleIntent(NextPageIntent());
+                      ref
+                          .read(pageViewProvider.notifier)
+                          .handleIntent(NextPageIntent());
                     },
                     child: Text(
                       OnBoardingStrings.getStarted,

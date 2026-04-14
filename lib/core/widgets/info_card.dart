@@ -4,15 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 
-
-class OnBoardingCard extends StatelessWidget {
+class InfoCard extends StatelessWidget {
   final String title;
   final String subTitle;
   final String svgPath;
   final Color bgColor;
   final Color iconBgColor;
   final Color textColor;
-  const OnBoardingCard({
+  const InfoCard({
     super.key,
     required this.title,
     required this.subTitle,
@@ -38,11 +37,7 @@ class OnBoardingCard extends StatelessWidget {
               color: iconBgColor,
               borderRadius: BorderRadius.circular(12.r),
             ),
-            child: SvgPicture.asset(
-              svgPath,
-              height: 24.h,
-              width: 24.w,
-            ),
+            child: SvgPicture.asset(svgPath, height: 24.h, width: 24.w),
           ),
           Gap(16.w),
           Expanded(
@@ -58,9 +53,9 @@ class OnBoardingCard extends StatelessWidget {
                 ),
                 Text(
                   subTitle,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontSize: 12.sp,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(fontSize: 12.sp),
                 ),
               ],
             ),
