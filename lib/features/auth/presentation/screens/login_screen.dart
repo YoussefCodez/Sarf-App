@@ -1,11 +1,11 @@
 import 'package:finance_tracking/app_routes.dart';
-import 'package:finance_tracking/core/app_strings/sign_up_strings.dart';
+import 'package:finance_tracking/core/app_strings/login_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
 import 'package:finance_tracking/core/theme/app_gradients.dart';
 import 'package:finance_tracking/features/auth/presentation/view_models/intents/auth_intent.dart';
 import 'package:finance_tracking/features/auth/presentation/view_models/providers/auth_provider.dart';
 import 'package:finance_tracking/features/auth/presentation/view_models/states/auth_states.dart';
-import 'package:finance_tracking/features/auth/presentation/widgets/sign_up_widgets/sign_up_form.dart';
+import 'package:finance_tracking/features/auth/presentation/widgets/login_widgets/login_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,38 +14,35 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class SignUpScreen extends ConsumerStatefulWidget {
-  const SignUpScreen({super.key});
+class LoginScreen extends ConsumerStatefulWidget {
+  final bool backToSignUp;
+  const LoginScreen({super.key, this.backToSignUp = false});
 
   @override
-  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignUpScreenState extends ConsumerState<SignUpScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
-    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     ref.listen<AuthStates>(authNotifierProvider, (previous, next) {
-      if (next is SignUpSuccess) {
+      if (next is LoginSuccess) {
         context.go(AppRoutes.homeScreen);
-      } else if (next is SignUpError) {
+      } else if (next is LoginError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(next.errorMessage),
+            content: Text(next.errorMessage, style: TextStyle(color: AppColors.whiteColor,fontSize: 14.sp),),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -64,11 +61,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Column(
-                    crossAxisAlignment: .start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Spacer(),
                       Text(
-                            SignUpStrings.createNewAccount,
+                            LoginStrings.welcomeBack,
                             style: useTextTheme.bodyMedium,
                           )
                           .animate()
@@ -82,7 +79,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                             duration: const Duration(seconds: 1),
                           ),
                       Text(
-                            SignUpStrings.createNewAccountDescription,
+                            LoginStrings.welcomeBackDescription,
                             style: useTextTheme.bodySmall,
                           )
                           .animate()
@@ -96,38 +93,34 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                             duration: const Duration(seconds: 1),
                           ),
                       Gap(20.h),
-                      SignUpForm(
+                      LoginForm(
                         useTextTheme: useTextTheme,
                         formKey: _formKey,
-                        nameController: _nameController,
                         emailController: _emailController,
                         passwordController: _passwordController,
-                        confirmPasswordController: _confirmPasswordController,
                       ),
                       const Spacer(),
                       Row(
-                        mainAxisAlignment: .spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            SignUpStrings.alreadyHaveAccount,
+                            LoginStrings.dontHaveAccount,
                             style: useTextTheme.labelMedium?.copyWith(
                               color: AppColors.whiteColor,
                               fontSize: 15.sp,
                             ),
                           ),
                           TextButton(
-                            style: ButtonStyle(
+                            style: const ButtonStyle(
                               padding: WidgetStatePropertyAll(
-                                EdgeInsetsGeometry.zero,
+                                EdgeInsets.zero,
                               ),
                             ),
                             onPressed: () {
-                              context.go(
-                                "${AppRoutes.loginScreen}?backToSignUp=true",
-                              );
+                              context.go(AppRoutes.signUpScreen);
                             },
                             child: Text(
-                              SignUpStrings.signIn,
+                              LoginStrings.signUp,
                               style: useTextTheme.labelMedium?.copyWith(
                                 color: AppColors.primaryColor,
                                 fontSize: 15.sp,
@@ -140,7 +133,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       Consumer(
                         builder: (context, ref, child) {
                           final authState = ref.watch(authNotifierProvider);
-                          final isLoading = authState is SignUpLoading;
+                          final isLoading = authState is LoginLoading;
                           return SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(
@@ -151,17 +144,14 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                               .validate()) {
                                             ref
                                                 .read(
-                                                  authNotifierProvider.notifier,
-                                                )
+                                                    authNotifierProvider.notifier)
                                                 .handleIntent(
-                                                  SignUpIntent(
+                                                  LoginIntent(
                                                     email: _emailController.text
                                                         .trim(),
                                                     password:
                                                         _passwordController.text
                                                             .trim(),
-                                                    name: _nameController.text
-                                                        .trim(),
                                                   ),
                                                 );
                                           }
@@ -172,7 +162,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                           size: 24,
                                         )
                                       : Text(
-                                          SignUpStrings.createNewAccount,
+                                          LoginStrings.login,
                                           style: useTextTheme.labelMedium,
                                         ),
                                 ),

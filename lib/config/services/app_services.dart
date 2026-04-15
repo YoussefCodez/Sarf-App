@@ -1,3 +1,4 @@
+import 'package:finance_tracking/config/services/supabase_service.dart';
 import 'package:flutter/widgets.dart';
 import 'hive_service.dart';
 import 'di_service.dart';
@@ -13,5 +14,8 @@ class AppServices {
 
     // Configure Dependency Injection
     await configureDependencies();
+
+    // Configure Supabase
+    await SupabaseService.init();
   }
 }

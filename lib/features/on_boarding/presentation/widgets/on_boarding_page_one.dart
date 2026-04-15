@@ -1,3 +1,4 @@
+import 'package:finance_tracking/app_routes.dart';
 import 'package:finance_tracking/core/app_assets/app_svgs.dart';
 import 'package:finance_tracking/core/app_strings/on_boarding_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 class OnBoardingPageOne extends StatefulWidget {
   const OnBoardingPageOne({super.key});
@@ -126,6 +128,21 @@ class _OnBoardingPageOneState extends State<OnBoardingPageOne> {
             ],
             if (buttonVisible) ...[
               Spacer(),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: AppColors.primaryColor,
+                  side: BorderSide(color: AppColors.primaryColor),
+                ),
+                onPressed: () {
+                  context.go(AppRoutes.loginScreen);
+                },
+                child: Text(
+                  OnBoardingStrings.alreadyHaveAnAccount,
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+              ),
+              Gap(10.h),
               Consumer(
                 builder: (context, ref, child) {
                   return ElevatedButton(

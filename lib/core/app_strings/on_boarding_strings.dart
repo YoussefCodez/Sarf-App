@@ -20,7 +20,7 @@ abstract class OnBoardingStrings {
   static const String savingGoalYes = 'Yes, I am';
   static const String savingGoalNo = 'Just tracking';
   static const String continueButton = 'Continue';
-  static const String addPhotoForYourGoal = 'Add a photo for your goal\n(Optional)';
+  static const String addPhotoForYourGoal = 'Add a ponBoardingPageTwoSubTitlehoto for your goal\n(Optional)';
   static const String goalName = 'Goal Name';
   static const String targetAmount = 'Target Amount';
   static const String goalNameHint = 'e.g. New Phone';
@@ -39,4 +39,8 @@ abstract class OnBoardingStrings {
       "This Help Us , Give's You A Better Experience And More Accurate Insights";
   static const String finishButton = "Finish";
   static const String skipButton = "Skip";
+  static const String whyToSignUp = "Why to sign up?";
+  static const String whyToSignUpSubtitle =
+      "To Recovry your account data and sync it across devices";
+  static const String alreadyHaveAnAccount = "Already Have An Account?";
 }
