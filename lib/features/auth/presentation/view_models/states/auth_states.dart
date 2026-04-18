@@ -1,4 +1,4 @@
-import 'package:finance_tracking/features/auth/domain/entities/user_entity.dart';
+import 'package:finance_tracking/features/auth/domain/entities/auth_user_entity.dart';
 
 sealed class AuthStates {}
 
@@ -8,7 +8,7 @@ class AuthInitial extends AuthStates {}
 class SignUpLoading extends AuthStates {}
 
 class SignUpSuccess extends AuthStates {
-  final UserEntity user;
+  final AuthUserEntity user;
   SignUpSuccess({required this.user});
 }
 
@@ -21,7 +21,7 @@ class SignUpError extends AuthStates {
 class LoginLoading extends AuthStates {}
 
 class LoginSuccess extends AuthStates {
-  final UserEntity user;
+  final AuthUserEntity user;
   LoginSuccess({required this.user});
 }
 

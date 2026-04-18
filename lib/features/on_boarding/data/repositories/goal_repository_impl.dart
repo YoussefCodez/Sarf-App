@@ -2,7 +2,7 @@ import 'package:injectable/injectable.dart';
 import '../../domain/entities/goal_entity.dart';
 import '../../domain/repositories/goal_repository.dart';
 import '../datasources/goal_local_datasource.dart';
-import '../models/goal_model.dart';
+import '../models/local_goal_model.dart';
 
 @LazySingleton(as: GoalRepository)
 class GoalRepositoryImpl implements GoalRepository {
@@ -12,7 +12,7 @@ class GoalRepositoryImpl implements GoalRepository {
 
   @override
   Future<void> addGoal(GoalEntity goal) async {
-    final model = GoalModel.fromEntity(goal);
+    final model = LocalGoalModel.fromEntity(goal);
     await _localDataSource.addGoal(model);
   }
 }

@@ -2,8 +2,8 @@ import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 @LazySingleton()
-class RemoteDataSource {
+class AuthRemoteDataSource {
   final SupabaseClient supabaseClient;
 
-  RemoteDataSource({required this.supabaseClient});
+  AuthRemoteDataSource({required this.supabaseClient});
 }

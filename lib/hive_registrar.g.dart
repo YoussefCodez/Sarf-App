@@ -3,16 +3,19 @@
 // Check in to version control
 
 import 'package:hive_ce/hive_ce.dart';
-import 'package:finance_tracking/features/on_boarding/data/models/goal_model.dart';
+import 'package:finance_tracking/features/auth/data/models/local_user_profile_model.dart';
+import 'package:finance_tracking/features/on_boarding/data/models/local_goal_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
-    registerAdapter(GoalModelAdapter());
+    registerAdapter(LocalGoalModelAdapter());
+    registerAdapter(LocalUserProfileModelAdapter());
   }
 }
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
-    registerAdapter(GoalModelAdapter());
+    registerAdapter(LocalGoalModelAdapter());
+    registerAdapter(LocalUserProfileModelAdapter());
   }
 }

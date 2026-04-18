@@ -1,10 +1,10 @@
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import '../../domain/entities/goal_entity.dart';
 
-part 'goal_model.g.dart';
+part 'local_goal_model.g.dart';
 
 @HiveType(typeId: 0)
-class GoalModel extends HiveObject {
+class LocalGoalModel extends HiveObject {
   @HiveField(0)
   final String imagePath;
   @HiveField(1)
@@ -12,10 +12,14 @@ class GoalModel extends HiveObject {
   @HiveField(2)
   final String price;
 
-  GoalModel({required this.imagePath, required this.name, required this.price});
+  LocalGoalModel({
+    required this.imagePath,
+    required this.name,
+    required this.price,
+  });
 
-  factory GoalModel.fromEntity(GoalEntity entity) {
-    return GoalModel(
+  factory LocalGoalModel.fromEntity(GoalEntity entity) {
+    return LocalGoalModel(
       imagePath: entity.imagePath,
       name: entity.title,
       price: entity.description,

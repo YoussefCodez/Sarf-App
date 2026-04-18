@@ -1,4 +1,6 @@
 import 'package:finance_tracking/app_routes.dart';
+import 'package:finance_tracking/config/models/remote_user_profile_model.dart';
+import 'package:finance_tracking/config/models/remote_goal_model.dart';
 import 'package:finance_tracking/core/app_strings/sign_up_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
 import 'package:finance_tracking/core/theme/app_gradients.dart';
@@ -10,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:finance_tracking/features/on_boarding/data/datasources/on_boarding_local_datasource.dart';
+import 'package:finance_tracking/config/services/di_service.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -53,6 +57,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     });
 
     final useTextTheme = Theme.of(context).textTheme;
+    final onBoardingData = getIt<OnBoardingLocalDataSource>();
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -160,8 +165,48 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                                     password:
                                                         _passwordController.text
                                                             .trim(),
-                                                    name: _nameController.text
-                                                        .trim(),
+                                                    userProfileModel: RemoteUserProfileModel(
+                                                      id: "",
+                                                      name: _nameController.text
+                                                          .trim(),
+                                                      email: _emailController
+                                                          .text
+                                                          .trim(),
+                                                      weeklySpending:
+                                                          onBoardingData
+                                                              .getWeeklySpending()
+                                                              .toString(),
+                                                      forGoal: onBoardingData
+                                                          .getTrackingReason(),
+                                                      createdAt: DateTime.now(),
+                                                    ),
+                                                    goalModel:
+                                                        onBoardingData
+                                                                .getTrackingReason() &&
+                                                            onBoardingData
+                                                                    .getGoal() !=
+                                                                null
+                                                        ? RemoteGoalModel(
+                                                            id: "",
+                                                            createdAt:
+                                                                DateTime.now(),
+                                                            name: onBoardingData
+                                                                .getGoal()!
+                                                                .name,
+                                                            image:
+                                                                onBoardingData
+                                                                    .getGoal()!
+                                                                    .imagePath,
+                                                            price:
+                                                                double.tryParse(
+                                                                  onBoardingData
+                                                                      .getGoal()!
+                                                                      .price,
+                                                                ) ??
+                                                                0.0,
+                                                            userId: "",
+                                                          )
+                                                        : null,
                                                   ),
                                                 );
                                           }

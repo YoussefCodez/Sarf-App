@@ -1,9 +1,9 @@
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:injectable/injectable.dart';
-import '../models/goal_model.dart';
+import '../models/local_goal_model.dart';
 
 abstract interface class GoalLocalDataSource {
-  Future<void> addGoal(GoalModel goal);
+  Future<void> addGoal(LocalGoalModel goal);
 }
 
 @LazySingleton(as: GoalLocalDataSource)
@@ -14,8 +14,8 @@ class GoalLocalDataSourceImpl implements GoalLocalDataSource {
   GoalLocalDataSourceImpl(this._hive);
 
   @override
-  Future<void> addGoal(GoalModel goal) async {
-    final box = await _hive.openBox<GoalModel>(_boxName);
+  Future<void> addGoal(LocalGoalModel goal) async {
+    final box = await _hive.openBox<LocalGoalModel>(_boxName);
     await box.add(goal);
   }
 }

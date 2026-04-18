@@ -14,12 +14,16 @@ import 'package:hive_ce_flutter/hive_ce_flutter.dart' as _i965;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i454;
 
-import '../../features/auth/data/data_source/remote_data_source.dart' as _i217;
+import '../../features/auth/data/data_source/auth_local_data_source.dart'
+    as _i280;
+import '../../features/auth/data/data_source/auth_remote_data_source.dart'
+    as _i217;
 import '../../features/auth/data/repositories/auth_repository_impl.dart'
     as _i153;
 import '../../features/auth/domain/repositories/auth_repository_contract.dart'
     as _i273;
 import '../../features/auth/domain/use_cases/login_usecase.dart' as _i1012;
+import '../../features/auth/domain/use_cases/logout_usecase.dart' as _i844;
 import '../../features/auth/domain/use_cases/signup_usecase.dart' as _i322;
 import '../../features/on_boarding/data/datasources/goal_local_datasource.dart'
     as _i428;
@@ -55,23 +59,32 @@ extension GetItInjectableX on _i174.GetIt {
     final supabaseModule = _$SupabaseModule();
     gh.lazySingleton<_i965.HiveInterface>(() => hiveModule.hive);
     gh.lazySingleton<_i454.SupabaseClient>(() => supabaseModule.supabaseClient);
-    gh.lazySingleton<_i217.RemoteDataSource>(
-      () => _i217.RemoteDataSource(supabaseClient: gh<_i454.SupabaseClient>()),
+    gh.lazySingleton<_i217.AuthRemoteDataSource>(
+      () => _i217.AuthRemoteDataSource(
+        supabaseClient: gh<_i454.SupabaseClient>(),
+      ),
     );
     gh.lazySingleton<_i903.OnBoardingLocalDataSource>(
       () => _i903.OnBoardingLocalDataSourceImpl(gh<_i965.HiveInterface>()),
     );
-    gh.lazySingleton<_i428.GoalLocalDataSource>(
-      () => _i428.GoalLocalDataSourceImpl(gh<_i965.HiveInterface>()),
+    gh.lazySingleton<_i280.AuthLocalDataSource>(
+      () => _i280.AuthLocalDataSourceImpl(gh<_i965.HiveInterface>()),
     );
     gh.lazySingleton<_i273.AuthRepositoryContract>(
       () => _i153.AuthRepositoryImpl(
-        remoteDataSource: gh<_i217.RemoteDataSource>(),
+        remoteDataSource: gh<_i217.AuthRemoteDataSource>(),
+        localDataSource: gh<_i280.AuthLocalDataSource>(),
       ),
+    );
+    gh.lazySingleton<_i428.GoalLocalDataSource>(
+      () => _i428.GoalLocalDataSourceImpl(gh<_i965.HiveInterface>()),
     );
     gh.lazySingleton<_i874.OnBoardingRepository>(
       () =>
           _i644.OnBoardingRepositoryImpl(gh<_i903.OnBoardingLocalDataSource>()),
+    );
+    gh.lazySingleton<_i844.LogoutUsecase>(
+      () => _i844.LogoutUsecase(repository: gh<_i273.AuthRepositoryContract>()),
     );
     gh.lazySingleton<_i102.SaveEndOnBoardingUseCase>(
       () => _i102.SaveEndOnBoardingUseCase(gh<_i874.OnBoardingRepository>()),

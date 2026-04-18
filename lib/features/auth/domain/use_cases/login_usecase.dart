@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:finance_tracking/features/auth/domain/entities/user_entity.dart';
+import 'package:finance_tracking/features/auth/domain/entities/auth_user_entity.dart';
 import 'package:finance_tracking/features/auth/domain/repositories/auth_repository_contract.dart';
 import 'package:injectable/injectable.dart';
 
@@ -9,7 +9,7 @@ class LoginUsecase {
 
   LoginUsecase({required this.authRepositoryContract});
 
-  Future<Either<String, UserEntity>> call({
+  Future<Either<String, AuthUserEntity>> call({
     required String email,
     required String password,
   }) async {
