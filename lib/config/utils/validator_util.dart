@@ -1,4 +1,4 @@
-abstract class Validators {
+abstract class ValidatorUtil {
   static String? validateName(String? value) {
     if (value == null || value.trim().isEmpty) {
       return "Name is required";

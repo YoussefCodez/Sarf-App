@@ -49,7 +49,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       } else if (next is SignUpError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(next.errorMessage),
+            content: Text(
+              next.errorMessage,
+              style: TextStyle(color: AppColors.whiteColor, fontSize: 14.sp),
+            ),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -165,21 +168,25 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                                     password:
                                                         _passwordController.text
                                                             .trim(),
-                                                    userProfileModel: RemoteUserProfileModel(
-                                                      id: "",
-                                                      name: _nameController.text
-                                                          .trim(),
-                                                      email: _emailController
-                                                          .text
-                                                          .trim(),
-                                                      weeklySpending:
-                                                          onBoardingData
-                                                              .getWeeklySpending()
-                                                              .toString(),
-                                                      forGoal: onBoardingData
-                                                          .getTrackingReason(),
-                                                      createdAt: DateTime.now(),
-                                                    ),
+                                                    userProfileModel:
+                                                        RemoteUserProfileModel(
+                                                          id: "",
+                                                          name: _nameController
+                                                              .text
+                                                              .trim(),
+                                                          email:
+                                                              _emailController
+                                                                  .text
+                                                                  .trim(),
+                                                          weeklySpending:
+                                                              onBoardingData
+                                                                  .getWeeklySpending()
+                                                                  .toString(),
+                                                          forGoal: onBoardingData
+                                                              .getTrackingReason(),
+                                                          createdAt:
+                                                              DateTime.now(),
+                                                        ),
                                                     goalModel:
                                                         onBoardingData
                                                                 .getTrackingReason() &&

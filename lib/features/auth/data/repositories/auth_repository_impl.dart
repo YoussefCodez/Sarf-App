@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:finance_tracking/config/const/app_tables.dart';
 import 'package:finance_tracking/config/models/remote_user_profile_model.dart';
+import 'package:finance_tracking/config/utils/out_put_print_util.dart';
 import 'package:finance_tracking/features/auth/data/models/local_user_profile_model.dart';
 import 'package:finance_tracking/config/models/remote_goal_model.dart';
 import 'package:finance_tracking/features/auth/data/data_source/auth_remote_data_source.dart';
@@ -36,7 +37,7 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
 
       try {
         if (response.user == null) {
-          return const Left("Signup failed: User is null");
+          return const Left("Signup failed: User is Not Found");
         }
 
         final updatedProfile = userProfileModel.copyWith(id: response.user!.id);
@@ -56,12 +57,13 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
               .insert(updatedGoal.toSupabase());
         }
       } catch (dpError) {
-        print(dpError);
+        OutPutPrintUtil.printOutPut(dpError);
         return Left(SupabaseErrorHandlerService.getErrorMessage(dpError));
       }
 
       return Right(AuthUserModel.fromSupabase(response.user!.toJson()));
     } catch (e) {
+      OutPutPrintUtil.printOutPut(e);
       return Left(SupabaseErrorHandlerService.getErrorMessage(e));
     }
   }
@@ -76,7 +78,7 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
           .signInWithPassword(email: email, password: password);
 
       if (response.user == null) {
-        return const Left("Signin failed: User is null");
+        return const Left("Signin failed: User is Not Found");
       }
 
       final profileData = await remoteDataSource.supabaseClient

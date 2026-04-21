@@ -1,4 +1,4 @@
-import 'package:finance_tracking/config/utils.dart';
+import 'package:finance_tracking/config/utils/validator_util.dart';
 import 'package:finance_tracking/core/app_strings/login_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class LoginForm extends StatelessWidget {
           children: [
             TextFormField(
                   controller: emailController,
-                  validator: Validators.validateEmail,
+                  validator: ValidatorUtil.validateEmail,
                   cursorColor: AppColors.primaryColor,
                   cursorHeight: 20.h,
                   style: useTextTheme.labelSmall,
@@ -60,7 +60,7 @@ class LoginForm extends StatelessWidget {
             Gap(20.h),
             TextFormField(
                   controller: passwordController,
-                  validator: Validators.validatePassword,
+                  validator: ValidatorUtil.validatePassword,
                   obscureText: true,
                   cursorColor: AppColors.primaryColor,
                   cursorHeight: 20.h,

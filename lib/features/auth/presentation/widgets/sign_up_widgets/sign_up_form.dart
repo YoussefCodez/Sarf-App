@@ -1,4 +1,4 @@
-import 'package:finance_tracking/config/utils.dart';
+import 'package:finance_tracking/config/utils/validator_util.dart';
 import 'package:finance_tracking/core/app_assets/app_svgs.dart';
 import 'package:finance_tracking/core/app_strings/on_boarding_strings.dart';
 import 'package:finance_tracking/core/app_strings/sign_up_strings.dart';
@@ -42,12 +42,15 @@ class SignUpForm extends StatelessWidget {
           children: [
             TextFormField(
                   controller: nameController,
-                  validator: Validators.validateName,
+                  validator: ValidatorUtil.validateName,
                   cursorColor: AppColors.primaryColor,
                   cursorHeight: 20.h,
                   style: useTextTheme.labelSmall,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.person, color: AppColors.primaryColor),
+                    prefixIcon: Icon(
+                      Icons.person,
+                      color: AppColors.primaryColor,
+                    ),
                     hintText: SignUpStrings.nameHint,
                     hintStyle: useTextTheme.bodySmall,
                     fillColor: AppColors.greyIconBackgroundColor,
@@ -64,12 +67,15 @@ class SignUpForm extends StatelessWidget {
             Gap(20.h),
             TextFormField(
                   controller: emailController,
-                  validator: Validators.validateEmail,
+                  validator: ValidatorUtil.validateEmail,
                   cursorColor: AppColors.primaryColor,
                   cursorHeight: 20.h,
                   style: useTextTheme.labelSmall,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.email, color: AppColors.primaryColor),
+                    prefixIcon: Icon(
+                      Icons.email,
+                      color: AppColors.primaryColor,
+                    ),
                     hintText: SignUpStrings.emailHint,
                     hintStyle: useTextTheme.bodySmall,
                     fillColor: AppColors.greyIconBackgroundColor,
@@ -86,7 +92,7 @@ class SignUpForm extends StatelessWidget {
             Gap(20.h),
             TextFormField(
                   controller: passwordController,
-                  validator: Validators.validatePassword,
+                  validator: ValidatorUtil.validatePassword,
                   obscureText: true,
                   cursorColor: AppColors.primaryColor,
                   cursorHeight: 20.h,
@@ -109,7 +115,7 @@ class SignUpForm extends StatelessWidget {
             Gap(20.h),
             TextFormField(
                   controller: confirmPasswordController,
-                  validator: (value) => Validators.validateConfirmPassword(
+                  validator: (value) => ValidatorUtil.validateConfirmPassword(
                     value,
                     passwordController.text,
                   ),

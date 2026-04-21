@@ -42,7 +42,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       } else if (next is LoginError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(next.errorMessage, style: TextStyle(color: AppColors.whiteColor,fontSize: 14.sp),),
+            content: Text(
+              next.errorMessage,
+              style: TextStyle(color: AppColors.whiteColor, fontSize: 14.sp),
+            ),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -112,9 +115,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           TextButton(
                             style: const ButtonStyle(
-                              padding: WidgetStatePropertyAll(
-                                EdgeInsets.zero,
-                              ),
+                              padding: WidgetStatePropertyAll(EdgeInsets.zero),
                             ),
                             onPressed: () {
                               context.go(AppRoutes.signUpScreen);
@@ -144,7 +145,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                               .validate()) {
                                             ref
                                                 .read(
-                                                    authNotifierProvider.notifier)
+                                                  authNotifierProvider.notifier,
+                                                )
                                                 .handleIntent(
                                                   LoginIntent(
                                                     email: _emailController.text
