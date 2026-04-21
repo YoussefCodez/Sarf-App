@@ -30,7 +30,8 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
     RemoteGoalModel? goalModel,
   }) async {
     try {
-      final response = await remoteDataSource.supabaseClient.auth.signUp(
+      // شغل نضيف: بننادي الـ DataSource مباشرة
+      final response = await remoteDataSource.signUp(
         email: email,
         password: password,
       );
@@ -42,9 +43,10 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
 
         final updatedProfile = userProfileModel.copyWith(id: response.user!.id);
 
-        await remoteDataSource.supabaseClient
-            .from(AppTables.profiles)
-            .insert(updatedProfile.toSupabase());
+        await remoteDataSource.insertData(
+          table: AppTables.profiles,
+          data: updatedProfile.toSupabase(),
+        );
 
         await localDataSource.saveUserProfile(
           LocalUserProfileModel.fromEntity(updatedProfile),
@@ -52,21 +54,24 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
 
         if (goalModel != null) {
           final updatedGoal = goalModel.copyWith(userId: response.user!.id);
-          await remoteDataSource.supabaseClient
-              .from(AppTables.goal)
-              .insert(updatedGoal.toSupabase());
+          await remoteDataSource.insertData(
+            table: AppTables.goal,
+            data: updatedGoal.toSupabase(),
+          );
         }
       } catch (dpError) {
-        OutPutPrintUtil.printOutPut(dpError);
+        printOutPut(dpError);
         return Left(SupabaseErrorHandlerService.getErrorMessage(dpError));
       }
 
       return Right(AuthUserModel.fromSupabase(response.user!.toJson()));
     } catch (e) {
-      OutPutPrintUtil.printOutPut(e);
+      printOutPut(e);
       return Left(SupabaseErrorHandlerService.getErrorMessage(e));
     }
   }
+
+//--------------------------------------------------------------------------
 
   @override
   Future<Either<String, AuthUserEntity>> signInWithEmailAndPassword({
@@ -74,18 +79,17 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
     required String password,
   }) async {
     try {
-      final response = await remoteDataSource.supabaseClient.auth
-          .signInWithPassword(email: email, password: password);
+      final response = await remoteDataSource.signIn(email: email, password: password);
 
       if (response.user == null) {
         return const Left("Signin failed: User is Not Found");
       }
 
-      final profileData = await remoteDataSource.supabaseClient
-          .from(AppTables.profiles)
-          .select()
-          .eq("id", response.user!.id)
-          .single();
+      final profileData = await remoteDataSource.selectSingle(
+        table: AppTables.profiles,
+        column: "id",
+        value: response.user!.id,
+      );
 
       final remoteProfile = RemoteUserProfileModel.fromSupabase(profileData);
 

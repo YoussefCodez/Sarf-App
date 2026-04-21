@@ -17,7 +17,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' as _i454;
 import '../../features/auth/data/data_source/auth_local_data_source.dart'
     as _i280;
 import '../../features/auth/data/data_source/auth_remote_data_source.dart'
-    as _i217;
+    as _i182;
 import '../../features/auth/data/repositories/auth_repository_impl.dart'
     as _i153;
 import '../../features/auth/domain/repositories/auth_repository_contract.dart'
@@ -59,8 +59,8 @@ extension GetItInjectableX on _i174.GetIt {
     final supabaseModule = _$SupabaseModule();
     gh.lazySingleton<_i965.HiveInterface>(() => hiveModule.hive);
     gh.lazySingleton<_i454.SupabaseClient>(() => supabaseModule.supabaseClient);
-    gh.lazySingleton<_i217.AuthRemoteDataSource>(
-      () => _i217.AuthRemoteDataSource(
+    gh.lazySingleton<_i182.AuthRemoteDataSource>(
+      () => _i182.AuthRemoteDataSource(
         supabaseClient: gh<_i454.SupabaseClient>(),
       ),
     );
@@ -72,7 +72,7 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i273.AuthRepositoryContract>(
       () => _i153.AuthRepositoryImpl(
-        remoteDataSource: gh<_i217.AuthRemoteDataSource>(),
+        remoteDataSource: gh<_i182.AuthRemoteDataSource>(),
         localDataSource: gh<_i280.AuthLocalDataSource>(),
       ),
     );
