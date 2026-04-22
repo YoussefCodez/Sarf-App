@@ -11,6 +11,7 @@ class InfoCard extends StatelessWidget {
   final Color bgColor;
   final Color iconBgColor;
   final Color textColor;
+  final Color? svgColor;
   const InfoCard({
     super.key,
     required this.title,
@@ -19,6 +20,7 @@ class InfoCard extends StatelessWidget {
     required this.bgColor,
     this.iconBgColor = AppColors.greyIconBackgroundColor,
     this.textColor = AppColors.whiteColor,
+    this.svgColor
   });
 
   @override
@@ -37,7 +39,14 @@ class InfoCard extends StatelessWidget {
               color: iconBgColor,
               borderRadius: BorderRadius.circular(12.r),
             ),
-            child: SvgPicture.asset(svgPath, height: 24.h, width: 24.w),
+            child: SvgPicture.asset(
+              svgPath,
+              height: 24.h,
+              width: 24.w,
+              colorFilter: svgColor != null
+                  ? ColorFilter.mode(svgColor!, .srcIn)
+                  : null,
+            ),
           ),
           Gap(16.w),
           Expanded(

@@ -7,6 +7,12 @@ abstract class AppTheme {
     brightness: .dark,
     scaffoldBackgroundColor: AppColors.backgroundColor,
     fontFamily: "Main",
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.secondCardColor,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      centerTitle: false,
+    ),
     textTheme: TextTheme(
       bodyMedium: TextStyle(
         fontWeight: .bold,

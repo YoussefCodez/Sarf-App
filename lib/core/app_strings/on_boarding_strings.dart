@@ -20,7 +20,7 @@ abstract class OnBoardingStrings {
   static const String savingGoalYes = 'Yes, I am';
   static const String savingGoalNo = 'Just tracking';
   static const String continueButton = 'Continue';
-  static const String addPhotoForYourGoal = 'Add a ponBoardingPageTwoSubTitlehoto for your goal\n(Optional)';
+  static const String addPhotoForYourGoal = 'Add a photo for your goal\n(Optional)';
   static const String goalName = 'Goal Name';
   static const String targetAmount = 'Target Amount';
   static const String goalNameHint = 'e.g. New Phone';

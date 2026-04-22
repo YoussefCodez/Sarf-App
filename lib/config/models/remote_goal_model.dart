@@ -24,22 +24,25 @@ class RemoteGoalModel extends RemoteGoalEntity {
   }
 
   Map<String, dynamic> toSupabase() {
-    return {
-      'id': id,
+    final map = {
       'name': name,
       'image': image,
       'price': price,
       'user_id': userId,
       'created_at': createdAt.toIso8601String(),
     };
+    if (id.isNotEmpty) {
+      map['id'] = id;
+    }
+    return map;
   }
 
-  RemoteGoalModel copyWith({String? id, String? userId}) {
+  RemoteGoalModel copyWith({String? id, String? userId, String? image}) {
     return RemoteGoalModel(
       id: id ?? this.id,
       createdAt: createdAt,
       name: name,
-      image: image,
+      image: image ?? this.image,
       price: price,
       userId: userId ?? this.userId,
     );

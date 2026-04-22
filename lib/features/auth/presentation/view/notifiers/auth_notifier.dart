@@ -3,8 +3,8 @@ import 'package:finance_tracking/config/models/remote_goal_model.dart';
 import 'package:finance_tracking/features/auth/domain/use_cases/login_usecase.dart';
 import 'package:finance_tracking/features/auth/domain/use_cases/signup_usecase.dart';
 import 'package:finance_tracking/features/auth/domain/use_cases/logout_usecase.dart';
-import 'package:finance_tracking/features/auth/presentation/view_models/intents/auth_intent.dart';
-import 'package:finance_tracking/features/auth/presentation/view_models/states/auth_states.dart';
+import 'package:finance_tracking/features/auth/presentation/view/intents/auth_intent.dart';
+import 'package:finance_tracking/features/auth/presentation/view/states/auth_states.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 class AuthNotifier extends StateNotifier<AuthStates> {

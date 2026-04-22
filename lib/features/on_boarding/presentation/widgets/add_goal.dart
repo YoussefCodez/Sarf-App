@@ -1,7 +1,7 @@
 import 'package:finance_tracking/core/app_strings/on_boarding_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/intents/why_tracking_intent.dart';
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/providers/why_tracking_provider.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/intents/why_tracking_intent.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/providers/why_tracking_provider.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/widgets/select_goal_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -195,6 +195,7 @@ class _AddGoalState extends ConsumerState<AddGoal> {
                                           imagePath: _imagePath ?? "",
                                         ),
                                       );
+                                  FocusScope.of(context).unfocus();
                                 }
                               },
                               child: Text(

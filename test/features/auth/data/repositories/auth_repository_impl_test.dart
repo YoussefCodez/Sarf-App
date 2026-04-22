@@ -16,6 +16,7 @@ void main() {
   late AuthRepositoryImpl repository;
   late MockAuthRemoteDataSource mockRemoteDataSource;
   late MockAuthLocalDataSource mockLocalDataSource;
+  const tName = "Youssef";
   const tEmail = "youssef@gmail.com";
   const tPassword = "password123";
 
@@ -32,7 +33,7 @@ void main() {
   group("Sign Up With Email And Password", () {
     final tUserProfile = RemoteUserProfileModel(
       id: "id",
-      name: "youssef",
+      name: tName,
       email: tEmail,
       weeklySpending: "100",
       forGoal: false,
@@ -56,7 +57,11 @@ void main() {
         final expectedData = tUserProfile.copyWith(id: 'user_123').toSupabase();
 
         when(
-          mockRemoteDataSource.signUp(email: tEmail, password: tPassword),
+          mockRemoteDataSource.signUp(
+            name: tName,
+            email: tEmail,
+            password: tPassword,
+          ),
         ).thenAnswer((_) async => tAuthResponse);
 
         when(
@@ -77,7 +82,11 @@ void main() {
         expect(result.isRight(), true);
 
         verify(
-          mockRemoteDataSource.signUp(email: tEmail, password: tPassword),
+          mockRemoteDataSource.signUp(
+            name: tName,
+            email: tEmail,
+            password: tPassword,
+          ),
         ).called(1);
         verify(mockLocalDataSource.saveUserProfile(any)).called(1);
       },
@@ -100,7 +109,11 @@ void main() {
         final expectedData = tUserProfile.copyWith(id: 'user_123').toSupabase();
 
         when(
-          mockRemoteDataSource.signUp(email: tEmail, password: tPassword),
+          mockRemoteDataSource.signUp(
+            name: tName,
+            email: tEmail,
+            password: tPassword,
+          ),
         ).thenAnswer((_) async => tAuthResponse);
 
         when(
@@ -142,7 +155,11 @@ void main() {
         expect(result.isRight(), true);
 
         verify(
-          mockRemoteDataSource.signUp(email: tEmail, password: tPassword),
+          mockRemoteDataSource.signUp(
+            name: tName,
+            email: tEmail,
+            password: tPassword,
+          ),
         ).called(1);
 
         verify(mockLocalDataSource.saveUserProfile(any)).called(1);
@@ -171,7 +188,11 @@ void main() {
       final expectedData = tUserProfile.copyWith(id: 'user_123').toSupabase();
 
       when(
-        mockRemoteDataSource.signUp(email: tEmail, password: tPassword),
+        mockRemoteDataSource.signUp(
+          name: tName,
+          email: tEmail,
+          password: tPassword,
+        ),
       ).thenAnswer((_) async => tAuthResponse);
 
       when(
@@ -202,7 +223,7 @@ void main() {
         final tAuthResponse = AuthResponse(user: mockUser, session: null);
         final tUserProfile = RemoteUserProfileModel(
           id: "id",
-          name: "youssef",
+          name: tName,
           email: tEmail,
           weeklySpending: "100",
           forGoal: false,

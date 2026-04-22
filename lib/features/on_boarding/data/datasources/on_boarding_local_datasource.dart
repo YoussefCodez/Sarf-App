@@ -12,6 +12,7 @@ abstract interface class OnBoardingLocalDataSource {
   double getWeeklySpending();
   Future<void> saveGoal(onboarding.LocalGoalModel goal);
   onboarding.LocalGoalModel? getGoal();
+  Future<void> clearOnBoardingData();
 }
 
 @LazySingleton(as: OnBoardingLocalDataSource)
@@ -74,5 +75,13 @@ class OnBoardingLocalDataSourceImpl implements OnBoardingLocalDataSource {
   onboarding.LocalGoalModel? getGoal() {
     if (!_hive.isBoxOpen(_boxName)) return null;
     return _hive.box(_boxName).get(_goalKey);
+  }
+
+  @override
+  Future<void> clearOnBoardingData() async {
+    final box = await _hive.openBox(_boxName);
+    await box.delete(_goalKey);
+    await box.delete(_trackingKey);
+    await box.delete(_weeklySpendingKey);
   }
 }

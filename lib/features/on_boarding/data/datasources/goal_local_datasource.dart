@@ -4,6 +4,7 @@ import '../models/local_goal_model.dart';
 
 abstract interface class GoalLocalDataSource {
   Future<void> addGoal(LocalGoalModel goal);
+  Future<void> clearGoals();
 }
 
 @LazySingleton(as: GoalLocalDataSource)
@@ -17,5 +18,11 @@ class GoalLocalDataSourceImpl implements GoalLocalDataSource {
   Future<void> addGoal(LocalGoalModel goal) async {
     final box = await _hive.openBox<LocalGoalModel>(_boxName);
     await box.add(goal);
+  }
+
+  @override
+  Future<void> clearGoals() async {
+    final box = await _hive.openBox<LocalGoalModel>(_boxName);
+    await box.clear();
   }
 }

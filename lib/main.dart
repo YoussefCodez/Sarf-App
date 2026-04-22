@@ -10,6 +10,17 @@ void main() async {
   runApp(ProviderScope(child: const MyApp()));
 }
 
+class MyScrollBehavior extends ScrollBehavior {
+  @override
+  Widget buildOverscrollIndicator(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
+    return child;
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
@@ -21,6 +32,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: AppTheme.theme,
           routerConfig: AppRouter.router,
+          scrollBehavior: MyScrollBehavior(),
         );
       },
     );

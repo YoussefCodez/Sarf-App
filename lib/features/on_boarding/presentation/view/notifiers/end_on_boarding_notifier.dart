@@ -1,4 +1,4 @@
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/intents/end_on_boarding_intent.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/intents/end_on_boarding_intent.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../states/end_on_boarding_state.dart';
 import '../../../domain/usecases/save_end_on_boarding_usecase.dart';

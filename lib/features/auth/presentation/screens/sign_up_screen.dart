@@ -4,9 +4,9 @@ import 'package:finance_tracking/config/models/remote_goal_model.dart';
 import 'package:finance_tracking/core/app_strings/sign_up_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
 import 'package:finance_tracking/core/theme/app_gradients.dart';
-import 'package:finance_tracking/features/auth/presentation/view_models/intents/auth_intent.dart';
-import 'package:finance_tracking/features/auth/presentation/view_models/providers/auth_provider.dart';
-import 'package:finance_tracking/features/auth/presentation/view_models/states/auth_states.dart';
+import 'package:finance_tracking/features/auth/presentation/view/intents/auth_intent.dart';
+import 'package:finance_tracking/features/auth/presentation/view/providers/auth_provider.dart';
+import 'package:finance_tracking/features/auth/presentation/view/states/auth_states.dart';
 import 'package:finance_tracking/features/auth/presentation/widgets/sign_up_widgets/sign_up_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -17,6 +17,7 @@ import 'package:finance_tracking/config/services/di_service.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:finance_tracking/features/on_boarding/data/datasources/goal_local_datasource.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
@@ -45,6 +46,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   Widget build(BuildContext context) {
     ref.listen<AuthStates>(authNotifierProvider, (previous, next) {
       if (next is SignUpSuccess) {
+        getIt<OnBoardingLocalDataSource>().clearOnBoardingData();
+        getIt<GoalLocalDataSource>().clearGoals();
         context.go(AppRoutes.homeScreen);
       } else if (next is SignUpError) {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -1,6 +1,6 @@
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/intents/why_tracking_intent.dart';
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/providers/why_tracking_provider.dart';
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/states/why_tracking_state.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/intents/why_tracking_intent.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/providers/why_tracking_provider.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/states/why_tracking_state.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/widgets/add_goal.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/widgets/why_tracking.dart';
 import 'package:flutter/material.dart';

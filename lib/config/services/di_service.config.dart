@@ -79,6 +79,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i428.GoalLocalDataSource>(
       () => _i428.GoalLocalDataSourceImpl(gh<_i965.HiveInterface>()),
     );
+    gh.lazySingleton<_i155.GoalRepository>(
+      () => _i300.GoalRepositoryImpl(
+        gh<_i428.GoalLocalDataSource>(),
+        gh<_i903.OnBoardingLocalDataSource>(),
+      ),
+    );
+    gh.lazySingleton<_i394.AddGoalUseCase>(
+      () => _i394.AddGoalUseCase(gh<_i155.GoalRepository>()),
+    );
     gh.lazySingleton<_i874.OnBoardingRepository>(
       () =>
           _i644.OnBoardingRepositoryImpl(gh<_i903.OnBoardingLocalDataSource>()),
@@ -104,12 +113,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i322.SignupUsecase(
         authRepositoryContract: gh<_i273.AuthRepositoryContract>(),
       ),
-    );
-    gh.lazySingleton<_i155.GoalRepository>(
-      () => _i300.GoalRepositoryImpl(gh<_i428.GoalLocalDataSource>()),
-    );
-    gh.lazySingleton<_i394.AddGoalUseCase>(
-      () => _i394.AddGoalUseCase(gh<_i155.GoalRepository>()),
     );
     return this;
   }

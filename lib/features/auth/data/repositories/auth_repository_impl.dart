@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:finance_tracking/config/const/app_tables.dart';
 import 'package:finance_tracking/config/models/remote_user_profile_model.dart';
@@ -30,8 +31,8 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
     RemoteGoalModel? goalModel,
   }) async {
     try {
-      // شغل نضيف: بننادي الـ DataSource مباشرة
       final response = await remoteDataSource.signUp(
+        name: userProfileModel.name,
         email: email,
         password: password,
       );
@@ -53,7 +54,29 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
         );
 
         if (goalModel != null) {
-          final updatedGoal = goalModel.copyWith(userId: response.user!.id);
+          String? imageUrl = goalModel.image;
+
+          if (imageUrl != null &&
+              imageUrl.isNotEmpty &&
+              !imageUrl.startsWith('http')) {
+            try {
+              final fileName =
+                  'goal_${response.user!.id}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+              imageUrl = await remoteDataSource.uploadImage(
+                bucket: 'goal_images',
+                path: fileName,
+                file: File(imageUrl),
+              );
+            } catch (e) {
+              printOutPut(e.toString());
+            }
+          }
+
+          final updatedGoal = goalModel.copyWith(
+            userId: response.user!.id,
+            image: imageUrl,
+          );
+
           await remoteDataSource.insertData(
             table: AppTables.goal,
             data: updatedGoal.toSupabase(),
@@ -71,7 +94,7 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
     }
   }
 
-//--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
 
   @override
   Future<Either<String, AuthUserEntity>> signInWithEmailAndPassword({
@@ -79,7 +102,10 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
     required String password,
   }) async {
     try {
-      final response = await remoteDataSource.signIn(email: email, password: password);
+      final response = await remoteDataSource.signIn(
+        email: email,
+        password: password,
+      );
 
       if (response.user == null) {
         return const Left("Signin failed: User is Not Found");

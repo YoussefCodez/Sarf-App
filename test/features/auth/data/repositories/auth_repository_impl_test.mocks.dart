@@ -4,15 +4,16 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
+import 'dart:io' as _i5;
 
 import 'package:finance_tracking/features/auth/data/data_source/auth_local_data_source.dart'
-    as _i5;
+    as _i7;
 import 'package:finance_tracking/features/auth/data/data_source/auth_remote_data_source.dart'
     as _i3;
 import 'package:finance_tracking/features/auth/data/models/local_user_profile_model.dart'
-    as _i6;
+    as _i8;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i7;
+import 'package:mockito/src/dummies.dart' as _i6;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i2;
 
 // ignore_for_file: type=lint
@@ -63,11 +64,13 @@ class MockAuthRemoteDataSource extends _i1.Mock
 
   @override
   _i4.Future<_i2.AuthResponse> signUp({
+    required String? name,
     required String? email,
     required String? password,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#signUp, [], {
+              #name: name,
               #email: email,
               #password: password,
             }),
@@ -75,6 +78,7 @@ class MockAuthRemoteDataSource extends _i1.Mock
               _FakeAuthResponse_1(
                 this,
                 Invocation.method(#signUp, [], {
+                  #name: name,
                   #email: email,
                   #password: password,
                 }),
@@ -134,19 +138,44 @@ class MockAuthRemoteDataSource extends _i1.Mock
             ),
           )
           as _i4.Future<Map<String, dynamic>>);
+
+  @override
+  _i4.Future<String> uploadImage({
+    required String? bucket,
+    required String? path,
+    required _i5.File? file,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#uploadImage, [], {
+              #bucket: bucket,
+              #path: path,
+              #file: file,
+            }),
+            returnValue: _i4.Future<String>.value(
+              _i6.dummyValue<String>(
+                this,
+                Invocation.method(#uploadImage, [], {
+                  #bucket: bucket,
+                  #path: path,
+                  #file: file,
+                }),
+              ),
+            ),
+          )
+          as _i4.Future<String>);
 }
 
 /// A class which mocks [AuthLocalDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthLocalDataSource extends _i1.Mock
-    implements _i5.AuthLocalDataSource {
+    implements _i7.AuthLocalDataSource {
   MockAuthLocalDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<void> saveUserProfile(_i6.LocalUserProfileModel? userProfile) =>
+  _i4.Future<void> saveUserProfile(_i8.LocalUserProfileModel? userProfile) =>
       (super.noSuchMethod(
             Invocation.method(#saveUserProfile, [userProfile]),
             returnValue: _i4.Future<void>.value(),
@@ -176,7 +205,7 @@ class MockUser extends _i1.Mock implements _i2.User {
   String get id =>
       (super.noSuchMethod(
             Invocation.getter(#id),
-            returnValue: _i7.dummyValue<String>(this, Invocation.getter(#id)),
+            returnValue: _i6.dummyValue<String>(this, Invocation.getter(#id)),
           )
           as String);
 
@@ -192,7 +221,7 @@ class MockUser extends _i1.Mock implements _i2.User {
   String get aud =>
       (super.noSuchMethod(
             Invocation.getter(#aud),
-            returnValue: _i7.dummyValue<String>(this, Invocation.getter(#aud)),
+            returnValue: _i6.dummyValue<String>(this, Invocation.getter(#aud)),
           )
           as String);
 
@@ -200,7 +229,7 @@ class MockUser extends _i1.Mock implements _i2.User {
   String get createdAt =>
       (super.noSuchMethod(
             Invocation.getter(#createdAt),
-            returnValue: _i7.dummyValue<String>(
+            returnValue: _i6.dummyValue<String>(
               this,
               Invocation.getter(#createdAt),
             ),

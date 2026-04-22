@@ -1,6 +1,6 @@
 import 'package:finance_tracking/core/app_strings/on_boarding_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/providers/why_tracking_provider.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/providers/why_tracking_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -1,7 +1,7 @@
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/intents/page_view_intent.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/intents/page_view_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/states/page_view_state.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/states/page_view_state.dart';
 
 class PageViewNotifier extends Notifier<PageViewState> {
   late final PageController pageController;

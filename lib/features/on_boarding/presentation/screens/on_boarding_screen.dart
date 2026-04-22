@@ -1,4 +1,4 @@
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/providers/page_view_provider.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/providers/page_view_provider.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/widgets/on_boarding_page_one.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/widgets/on_boarding_page_three.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/widgets/on_boarding_page_two.dart';

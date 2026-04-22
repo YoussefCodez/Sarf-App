@@ -1,6 +1,6 @@
 import 'package:finance_tracking/config/services/di_service.dart';
 import 'package:finance_tracking/features/on_boarding/domain/usecases/save_weekly_spending_usecase.dart';
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/intents/money_tracking_intnet.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/intents/money_tracking_intnet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class WeekMoneyTrackingNotifier extends Notifier<double> {

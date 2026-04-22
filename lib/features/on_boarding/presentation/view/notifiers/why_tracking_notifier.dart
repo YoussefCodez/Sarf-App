@@ -2,10 +2,10 @@ import 'package:finance_tracking/config/services/di_service.dart';
 import 'package:finance_tracking/features/on_boarding/domain/entities/goal_entity.dart';
 import 'package:finance_tracking/features/on_boarding/domain/usecases/add_goal_usecase.dart';
 import 'package:finance_tracking/features/on_boarding/domain/usecases/save_tracking_reason_usecase.dart';
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/intents/page_view_intent.dart';
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/intents/why_tracking_intent.dart';
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/providers/page_view_provider.dart';
-import 'package:finance_tracking/features/on_boarding/presentation/view_models/states/why_tracking_state.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/intents/page_view_intent.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/intents/why_tracking_intent.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/providers/page_view_provider.dart';
+import 'package:finance_tracking/features/on_boarding/presentation/view/states/why_tracking_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class WhyTrackingNotifier extends Notifier<WhyTrackingState> {
