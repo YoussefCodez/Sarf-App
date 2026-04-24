@@ -28,7 +28,7 @@ abstract class AppRouter {
       GoRoute(
         path: AppRoutes.loginScreen,
         builder: (context, state) {
-          final bool backToSignUp = state.uri.queryParameters['backToSignUp'] == 'true';
+          final bool backToSignUp = state.uri.queryParameters['backToSignUp'] == 'false';
           return LoginScreen(backToSignUp: backToSignUp);
         },
       ),
@@ -36,7 +36,6 @@ abstract class AppRouter {
         path: AppRoutes.homeScreen,
         builder: (context, state) => const MainLayoutScreen(),
       ),
-
     ],
   );
 }

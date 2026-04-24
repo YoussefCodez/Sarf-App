@@ -1,4 +1,5 @@
 import 'package:finance_tracking/app_routes.dart';
+import 'package:finance_tracking/config/services/di_service.dart';
 import 'package:finance_tracking/core/app_strings/login_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
 import 'package:finance_tracking/core/theme/app_gradients.dart';
@@ -6,6 +7,8 @@ import 'package:finance_tracking/features/auth/presentation/view/intents/auth_in
 import 'package:finance_tracking/features/auth/presentation/view/providers/auth_provider.dart';
 import 'package:finance_tracking/features/auth/presentation/view/states/auth_states.dart';
 import 'package:finance_tracking/features/auth/presentation/widgets/login_widgets/login_form.dart';
+import 'package:finance_tracking/features/on_boarding/data/datasources/on_boarding_local_datasource.dart';
+import 'package:finance_tracking/core/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +19,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   final bool backToSignUp;
-  const LoginScreen({super.key, this.backToSignUp = false});
+  const LoginScreen({super.key, this.backToSignUp = true});
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -40,14 +43,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (next is LoginSuccess) {
         context.go(AppRoutes.homeScreen);
       } else if (next is LoginError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              next.errorMessage,
-              style: TextStyle(color: AppColors.whiteColor, fontSize: 14.sp),
-            ),
-            backgroundColor: Colors.redAccent,
-          ),
+        CustomToast.show(
+          context: context,
+          message: next.errorMessage,
+          type: ToastType.error,
         );
       }
     });
@@ -106,28 +105,57 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            LoginStrings.dontHaveAccount,
-                            style: useTextTheme.labelMedium?.copyWith(
-                              color: AppColors.whiteColor,
-                              fontSize: 15.sp,
-                            ),
-                          ),
-                          TextButton(
-                            style: const ButtonStyle(
-                              padding: WidgetStatePropertyAll(EdgeInsets.zero),
-                            ),
-                            onPressed: () {
-                              context.go(AppRoutes.signUpScreen);
-                            },
-                            child: Text(
-                              LoginStrings.signUp,
+                          if (widget.backToSignUp) ...[
+                            Text(
+                              LoginStrings.dontHaveAccount,
                               style: useTextTheme.labelMedium?.copyWith(
-                                color: AppColors.primaryColor,
+                                color: AppColors.whiteColor,
                                 fontSize: 15.sp,
                               ),
                             ),
-                          ),
+                            TextButton(
+                              style: const ButtonStyle(
+                                padding: WidgetStatePropertyAll(
+                                  EdgeInsets.zero,
+                                ),
+                              ),
+                              onPressed: () {
+                                context.go(AppRoutes.signUpScreen);
+                              },
+                              child: Text(
+                                LoginStrings.signUp,
+                                style: useTextTheme.labelMedium?.copyWith(
+                                  color: AppColors.primaryColor,
+                                  fontSize: 15.sp,
+                                ),
+                              ),
+                            ),
+                          ] else ...[
+                            Text(
+                              LoginStrings.dontHaveAccount,
+                              style: useTextTheme.labelMedium?.copyWith(
+                                color: AppColors.whiteColor,
+                                fontSize: 15.sp,
+                              ),
+                            ),
+                            TextButton(
+                              style: const ButtonStyle(
+                                padding: WidgetStatePropertyAll(
+                                  EdgeInsets.zero,
+                                ),
+                              ),
+                              onPressed: () {
+                                context.go(AppRoutes.onBoardingScreen);
+                              },
+                              child: Text(
+                                LoginStrings.signUp,
+                                style: useTextTheme.labelMedium?.copyWith(
+                                  color: AppColors.primaryColor,
+                                  fontSize: 15.sp,
+                                ),
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                       Gap(20.h),
@@ -156,6 +184,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                             .trim(),
                                                   ),
                                                 );
+                                                getIt<OnBoardingLocalDataSource>().saveEndOnBoarding(true);
                                           }
                                         },
                                   child: isLoading

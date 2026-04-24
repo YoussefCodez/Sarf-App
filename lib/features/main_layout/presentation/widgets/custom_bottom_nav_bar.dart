@@ -43,7 +43,6 @@ class CustomBottomNavBar extends StatelessWidget {
           children: List.generate(icons.length, (index) {
             final isCenter = index == 2;
             final isSelected = currentIndex == index;
-
             if (isCenter) {
               return GestureDetector(
                 onTap: () => onTap(index),

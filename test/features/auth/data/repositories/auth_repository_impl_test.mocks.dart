@@ -6,6 +6,8 @@
 import 'dart:async' as _i4;
 import 'dart:io' as _i5;
 
+import 'package:finance_tracking/config/services/supabase_error_handler_service.dart'
+    as _i9;
 import 'package:finance_tracking/features/auth/data/data_source/auth_local_data_source.dart'
     as _i7;
 import 'package:finance_tracking/features/auth/data/data_source/auth_remote_data_source.dart'
@@ -248,4 +250,25 @@ class MockUser extends _i1.Mock implements _i2.User {
             returnValue: <String, dynamic>{},
           )
           as Map<String, dynamic>);
+}
+
+/// A class which mocks [SupabaseErrorHandlerService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSupabaseErrorHandlerService extends _i1.Mock
+    implements _i9.SupabaseErrorHandlerService {
+  MockSupabaseErrorHandlerService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  String handle(Object? e) =>
+      (super.noSuchMethod(
+            Invocation.method(#handle, [e]),
+            returnValue: _i6.dummyValue<String>(
+              this,
+              Invocation.method(#handle, [e]),
+            ),
+          )
+          as String);
 }

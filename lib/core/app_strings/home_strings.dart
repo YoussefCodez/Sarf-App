@@ -5,4 +5,5 @@ abstract class HomeStrings {
   static const String daysInARow = "days in a row";
   static const String recentTransactions = "Recent Transactions";
   static const String viewAll = "View All";
+  static const String yourMainGoal = "Your Main Goal";
 }

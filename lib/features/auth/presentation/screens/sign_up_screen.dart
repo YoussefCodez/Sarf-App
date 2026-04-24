@@ -8,6 +8,7 @@ import 'package:finance_tracking/features/auth/presentation/view/intents/auth_in
 import 'package:finance_tracking/features/auth/presentation/view/providers/auth_provider.dart';
 import 'package:finance_tracking/features/auth/presentation/view/states/auth_states.dart';
 import 'package:finance_tracking/features/auth/presentation/widgets/sign_up_widgets/sign_up_form.dart';
+import 'package:finance_tracking/core/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,14 +51,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         getIt<GoalLocalDataSource>().clearGoals();
         context.go(AppRoutes.homeScreen);
       } else if (next is SignUpError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              next.errorMessage,
-              style: TextStyle(color: AppColors.whiteColor, fontSize: 14.sp),
-            ),
-            backgroundColor: Colors.redAccent,
-          ),
+        CustomToast.show(
+          context: context,
+          message: next.errorMessage,
+          type: ToastType.error,
         );
       }
     });
@@ -187,6 +184,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                                                   .toString(),
                                                           forGoal: onBoardingData
                                                               .getTrackingReason(),
+                                                          currentMoney: "0",
                                                           createdAt:
                                                               DateTime.now(),
                                                         ),

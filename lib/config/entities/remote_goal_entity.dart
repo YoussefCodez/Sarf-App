@@ -1,4 +1,6 @@
-class RemoteGoalEntity {
+import 'package:equatable/equatable.dart';
+
+class RemoteGoalEntity extends Equatable {
   final String id;
   final DateTime createdAt;
   final String name;
@@ -14,4 +16,7 @@ class RemoteGoalEntity {
     required this.price,
     required this.userId,
   });
+
+  @override
+  List<Object?> get props => [id, createdAt, name, image, price, userId];
 }

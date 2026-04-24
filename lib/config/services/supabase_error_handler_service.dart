@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../const/app_strings.dart';
 
+@LazySingleton()
 class SupabaseErrorHandlerService {
-  static String getErrorMessage(Object e) {
+  String handle(Object e) {
     if (e is AuthException) {
       switch (e.code) {
         case 'user_already_exists':
@@ -15,7 +17,7 @@ class SupabaseErrorHandlerService {
         case 'email_not_confirmed':
           return "Please confirm your email first.";
         default:
-          return e.message; 
+          return e.message;
       }
     } else if (e is SocketException) {
       return AppStrings.netWorkError;

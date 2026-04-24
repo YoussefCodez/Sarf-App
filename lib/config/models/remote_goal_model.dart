@@ -18,7 +18,9 @@ class RemoteGoalModel extends RemoteGoalEntity {
       ),
       name: map['name'] ?? "Unknown Goal",
       image: map['image'],
-      price: (map['price'] ?? 0.0).toDouble(),
+      price: map['price'] != null 
+          ? double.tryParse(map['price'].toString()) ?? 0.0 
+          : 0.0,
       userId: map['user_id'] ?? "",
     );
   }

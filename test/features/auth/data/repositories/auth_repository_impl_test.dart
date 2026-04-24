@@ -1,6 +1,7 @@
 import 'package:finance_tracking/config/const/app_tables.dart';
 import 'package:finance_tracking/config/models/remote_goal_model.dart';
 import 'package:finance_tracking/config/models/remote_user_profile_model.dart';
+import 'package:finance_tracking/config/services/supabase_error_handler_service.dart';
 import 'package:finance_tracking/features/auth/data/data_source/auth_local_data_source.dart';
 import 'package:finance_tracking/features/auth/data/data_source/auth_remote_data_source.dart';
 import 'package:finance_tracking/features/auth/data/repositories/auth_repository_impl.dart';
@@ -9,13 +10,14 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-@GenerateMocks([AuthRemoteDataSource, AuthLocalDataSource, User])
+@GenerateMocks([AuthRemoteDataSource, AuthLocalDataSource, User, SupabaseErrorHandlerService])
 import 'auth_repository_impl_test.mocks.dart';
 
 void main() {
   late AuthRepositoryImpl repository;
   late MockAuthRemoteDataSource mockRemoteDataSource;
   late MockAuthLocalDataSource mockLocalDataSource;
+  late MockSupabaseErrorHandlerService mockSupabaseErrorHandlerService;
   const tName = "Youssef";
   const tEmail = "youssef@gmail.com";
   const tPassword = "password123";
@@ -23,8 +25,10 @@ void main() {
   setUp(() {
     mockRemoteDataSource = MockAuthRemoteDataSource();
     mockLocalDataSource = MockAuthLocalDataSource();
+    mockSupabaseErrorHandlerService = MockSupabaseErrorHandlerService();
 
     repository = AuthRepositoryImpl(
+      supabaseErrorHandlerService: mockSupabaseErrorHandlerService,
       remoteDataSource: mockRemoteDataSource,
       localDataSource: mockLocalDataSource,
     );
@@ -37,6 +41,7 @@ void main() {
       email: tEmail,
       weeklySpending: "100",
       forGoal: false,
+      currentMoney: "0",
       createdAt: DateTime.now(),
     );
 
@@ -227,6 +232,7 @@ void main() {
           email: tEmail,
           weeklySpending: "100",
           forGoal: false,
+          currentMoney: "0",
           createdAt: DateTime.now(),
         );
         when(mockUser.id).thenReturn("user_123");

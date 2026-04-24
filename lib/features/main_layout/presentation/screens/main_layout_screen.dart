@@ -50,16 +50,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
                       return Container(
                         height: height * 0.5,
                         padding: const EdgeInsets.all(24),
-                        child: Center(
-                          child: Text(
-                            "Add Transaction\n(Coming Soon)",
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: 24,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                        child: Column(), //TODO: Add transaction form
                       );
                     },
                   );

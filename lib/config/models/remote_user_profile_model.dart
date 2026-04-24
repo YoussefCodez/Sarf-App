@@ -7,6 +7,7 @@ class RemoteUserProfileModel extends UserProfileEntity {
     required super.email,
     required super.weeklySpending,
     required super.forGoal,
+    required super.currentMoney,
     required super.createdAt,
   });
 
@@ -17,6 +18,7 @@ class RemoteUserProfileModel extends UserProfileEntity {
       email: map['email'] ?? "",
       weeklySpending: map['weekly_spending'] ?? "0",
       forGoal: map['for_goal'] ?? false,
+      currentMoney: map['current_money'] ?? "0",
       createdAt: DateTime.parse(map['created_at'] ?? DateTime.now().toIso8601String()),
     );
   }
@@ -28,17 +30,31 @@ class RemoteUserProfileModel extends UserProfileEntity {
       'email': email,
       'weekly_spending': weeklySpending,
       'for_goal': forGoal,
+      'current_money': currentMoney,
       'created_at': createdAt.toIso8601String(),
     };
   }
 
-  RemoteUserProfileModel copyWith({String? id}) {
+  UserProfileEntity toEntity() {
+    return UserProfileEntity(
+      id: id,
+      name: name,
+      email: email,
+      weeklySpending: weeklySpending,
+      forGoal: forGoal,
+      currentMoney: currentMoney,
+      createdAt: createdAt,
+    );
+  }
+
+  RemoteUserProfileModel copyWith({String? id, String? currentMoney}) {
     return RemoteUserProfileModel(
       id: id ?? this.id,
       name: name,
       email: email,
       weeklySpending: weeklySpending,
       forGoal: forGoal,
+      currentMoney: currentMoney ?? this.currentMoney,
       createdAt: createdAt,
     );
   }

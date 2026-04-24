@@ -1,22 +1,51 @@
 import 'package:finance_tracking/core/app_assets/app_svgs.dart';
 import 'package:finance_tracking/core/app_strings/home_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
-import 'package:finance_tracking/core/widgets/icon_with_background.dart';
-import 'package:finance_tracking/core/widgets/main_card.dart';
+import 'package:finance_tracking/core/widgets/info_card.dart';
+import 'package:finance_tracking/features/daily_advice/presentation/providers/daily_advice_provider.dart';
+import 'package:finance_tracking/features/get_goal/presentation/view/providers/get_goal_provider.dart';
+import 'package:finance_tracking/features/get_goal/presentation/view/states/get_goal_states.dart';
+import 'package:finance_tracking/features/get_profile/presentation/view/providers/get_profile_provider.dart';
 import 'package:finance_tracking/features/home/presentation/widgets/custom_header.dart';
 import 'package:finance_tracking/features/home/presentation/widgets/goal_tracker_widget.dart';
 import 'package:finance_tracking/features/home/presentation/widgets/home_transaction_body.dart';
 import 'package:finance_tracking/features/home/presentation/widgets/home_transaction_header.dart';
+import 'package:finance_tracking/core/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(getProfileProvider.notifier).getProfile();
+      ref.read(getGoalProvider.notifier).getGoal();
+    });
+  }
+  
+
+  @override
   Widget build(BuildContext context) {
+    ref.listen(getGoalProvider, (previous, next) {
+      if(next is GetGoalError){
+        CustomToast.show(
+          context: context,
+          message: next.error,
+          type: ToastType.error,
+        );
+      }
+    });
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -35,6 +64,26 @@ class HomeScreen extends StatelessWidget {
         ),
         titleSpacing: 4.w,
         actions: [
+          Row(
+            mainAxisAlignment: .center,
+            children: [
+              Text(
+                "3",
+                textAlign: .center,
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: AppColors.secondaryColor,
+                  fontSize: 20.sp,
+                  fontStyle: .italic,
+                ),
+              ),
+              Gap(4.w),
+              Icon(
+                Icons.local_fire_department,
+                color: AppColors.secondaryColor,
+                size: 24.sp,
+              ),
+            ],
+          ),
           IconButton(
             onPressed: () {
               //TODO: Navigate to notifications screen
@@ -74,27 +123,20 @@ class HomeScreen extends StatelessWidget {
                         duration: Duration(milliseconds: 600),
                       ),
                   Gap(24.h),
-                  MainCard(
-                        title: HomeStrings.discpline,
-                        subTitle: "3 ${HomeStrings.daysInARow}",
-                        leading: IconWithBackGround(
-                          icon: Icons.local_fire_department,
-                          backgroundColor: AppColors.secondaryColor.withValues(
-                            alpha: 0.2,
-                          ),
-                          iconColor: AppColors.secondaryColor,
-                        ),
-                        svg: AppSvgs.streakBadge,
-                      )
-                      .animate()
-                      .fadeIn(
-                        delay: Duration(milliseconds: 400),
-                        duration: Duration(milliseconds: 600),
-                      )
-                      .slideY(
-                        begin: 0.1,
-                        duration: Duration(milliseconds: 600),
-                      ),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final advice = ref.watch(dailyAdviceProvider);
+                      return InfoCard(
+                        title: "Advice",
+                        subTitle: advice,
+                        bgColor: AppColors.primaryColor.withValues(alpha: 0.2),
+                        svgPath: AppSvgs.lamp,
+                        iconBgColor: AppColors.primaryColor,
+                        textColor: AppColors.whiteColor,
+                        svgColor: AppColors.whiteColor,
+                      );
+                    },
+                  ),
                   Gap(24.h),
                   HomeTransactionHeader()
                       .animate()

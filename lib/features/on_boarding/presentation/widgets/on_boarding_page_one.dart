@@ -135,7 +135,10 @@ class _OnBoardingPageOneState extends State<OnBoardingPageOne> {
                   side: BorderSide(color: AppColors.primaryColor),
                 ),
                 onPressed: () {
-                  context.go(AppRoutes.loginScreen);
+                  context.go(
+                    AppRoutes.loginScreen,
+                    extra: {'backToSignUp': 'false'},
+                  );
                 },
                 child: Text(
                   OnBoardingStrings.alreadyHaveAnAccount,

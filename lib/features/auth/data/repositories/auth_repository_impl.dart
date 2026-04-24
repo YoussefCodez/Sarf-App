@@ -17,10 +17,12 @@ import 'package:injectable/injectable.dart';
 class AuthRepositoryImpl implements AuthRepositoryContract {
   final AuthRemoteDataSource remoteDataSource;
   final AuthLocalDataSource localDataSource;
+  final SupabaseErrorHandlerService supabaseErrorHandlerService;
 
   AuthRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
+    required this.supabaseErrorHandlerService,
   });
 
   @override
@@ -84,13 +86,13 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
         }
       } catch (dpError) {
         printOutPut(dpError);
-        return Left(SupabaseErrorHandlerService.getErrorMessage(dpError));
+        return Left(supabaseErrorHandlerService.handle(dpError));
       }
 
       return Right(AuthUserModel.fromSupabase(response.user!.toJson()));
     } catch (e) {
       printOutPut(e);
-      return Left(SupabaseErrorHandlerService.getErrorMessage(e));
+      return Left(supabaseErrorHandlerService.handle(e));
     }
   }
 
@@ -125,7 +127,7 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
 
       return Right(AuthUserModel.fromSupabase(response.user!.toJson()));
     } catch (e) {
-      return Left(SupabaseErrorHandlerService.getErrorMessage(e));
+      return Left(supabaseErrorHandlerService.handle(e));
     }
   }
 
