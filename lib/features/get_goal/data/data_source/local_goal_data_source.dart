@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 
 abstract interface class LocalGoalDataSource {
   Future<void> saveGoal(HomeLocalGoalModel goal);
-  HomeLocalGoalModel? getGoal();
+  Future<HomeLocalGoalModel?> getGoal();
   Future<void> clearGoal();
 }
 
@@ -23,9 +23,9 @@ class LocalGoalDataSourceImpl implements LocalGoalDataSource {
   }
 
   @override
-  HomeLocalGoalModel? getGoal() {
-    if (!_hive.isBoxOpen(_boxName)) return null;
-    return _hive.box(_boxName).get(_goalKey);
+  Future<HomeLocalGoalModel?> getGoal() async {
+    final box = await _hive.openBox(_boxName);
+    return box.get(_goalKey);
   }
 
   @override

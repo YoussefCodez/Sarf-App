@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:finance_tracking/config/models/remote_goal_model.dart';
+import 'package:finance_tracking/config/services/network_info_service.dart';
 import 'package:finance_tracking/config/services/supabase_error_handler_service.dart';
 import 'package:finance_tracking/features/get_goal/data/data_source/remote_goal_data_source.dart';
 import 'package:finance_tracking/features/get_goal/data/data_source/local_goal_data_source.dart';
@@ -13,6 +14,7 @@ import 'package:test/test.dart';
   RemoteGoalDataSource,
   LocalGoalDataSource,
   SupabaseErrorHandlerService,
+  NetworkInfo,
 ])
 import 'goal_repository_impl_test.mocks.dart';
 
@@ -21,15 +23,18 @@ void main() {
   late MockLocalGoalDataSource localGoalDataSource;
   late MockSupabaseErrorHandlerService supabaseErrorHandlerService;
   late GoalRepositoryImpl goalRepositoryImpl;
+  late MockNetworkInfo networkInfo;
 
   setUp(() {
     remoteGoalDataSource = MockRemoteGoalDataSource();
     localGoalDataSource = MockLocalGoalDataSource();
     supabaseErrorHandlerService = MockSupabaseErrorHandlerService();
+    networkInfo = MockNetworkInfo();
     goalRepositoryImpl = GoalRepositoryImpl(
       remoteGoalDataSource: remoteGoalDataSource,
       localGoalDataSource: localGoalDataSource,
       supabaseErrorHandlerService: supabaseErrorHandlerService,
+      networkInfo: networkInfo,
     );
   });
 
@@ -45,9 +50,11 @@ void main() {
   );
 
   test("should return goal and save it locally when remote call is successful", () async {
+    bool isConnected = true;
     final tLocalGoalModel = HomeLocalGoalModel.fromEntity(tRemoteGoalModel);
 
     // Arrange
+    when(networkInfo.isConnected).thenAnswer((_) async => isConnected);
     when(remoteGoalDataSource.getGoal())
         .thenAnswer((_) async => tRemoteGoalModel);
     when(localGoalDataSource.saveGoal(any))
@@ -65,8 +72,10 @@ void main() {
   test("should return error when remote data source throws and NO cached data exists", () async {
     // Arrange
     final tException = Exception("Database error");
+    bool isConnected = true;
+    when(networkInfo.isConnected).thenAnswer((_) async => isConnected);
     when(remoteGoalDataSource.getGoal()).thenThrow(tException);
-    when(localGoalDataSource.getGoal()).thenReturn(null);
+    when(localGoalDataSource.getGoal()).thenAnswer((_) async => null);
     when(supabaseErrorHandlerService.handle(tException)).thenReturn("Server Error");
 
     // Act
@@ -81,7 +90,7 @@ void main() {
     // Arrange
     final tLocalGoalModel = HomeLocalGoalModel.fromEntity(tRemoteGoalModel);
     when(remoteGoalDataSource.getGoal()).thenThrow(Exception());
-    when(localGoalDataSource.getGoal()).thenReturn(tLocalGoalModel);
+    when(localGoalDataSource.getGoal()).thenAnswer((_) async => tLocalGoalModel);
 
     // Act
     final result = await goalRepositoryImpl.getGoal();

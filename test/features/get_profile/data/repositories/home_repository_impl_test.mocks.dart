@@ -7,6 +7,8 @@ import 'dart:async' as _i5;
 
 import 'package:finance_tracking/config/models/remote_user_profile_model.dart'
     as _i3;
+import 'package:finance_tracking/config/services/network_info_service.dart'
+    as _i10;
 import 'package:finance_tracking/config/services/supabase_error_handler_service.dart'
     as _i8;
 import 'package:finance_tracking/features/auth/data/data_source/auth_local_data_source.dart'
@@ -99,6 +101,14 @@ class MockAuthLocalDataSource extends _i1.Mock
           as _i5.Future<void>);
 
   @override
+  _i5.Future<_i7.LocalUserProfileModel?> getUserProfile() =>
+      (super.noSuchMethod(
+            Invocation.method(#getUserProfile, []),
+            returnValue: _i5.Future<_i7.LocalUserProfileModel?>.value(),
+          )
+          as _i5.Future<_i7.LocalUserProfileModel?>);
+
+  @override
   _i5.Future<void> clearUserProfile() =>
       (super.noSuchMethod(
             Invocation.method(#clearUserProfile, []),
@@ -127,4 +137,21 @@ class MockSupabaseErrorHandlerService extends _i1.Mock
             ),
           )
           as String);
+}
+
+/// A class which mocks [NetworkInfo].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNetworkInfo extends _i1.Mock implements _i10.NetworkInfo {
+  MockNetworkInfo() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<bool> get isConnected =>
+      (super.noSuchMethod(
+            Invocation.getter(#isConnected),
+            returnValue: _i5.Future<bool>.value(false),
+          )
+          as _i5.Future<bool>);
 }

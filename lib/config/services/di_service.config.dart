@@ -9,6 +9,7 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:connectivity_plus/connectivity_plus.dart' as _i895;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:hive_ce_flutter/hive_ce_flutter.dart' as _i965;
 import 'package:injectable/injectable.dart' as _i526;
@@ -66,8 +67,24 @@ import '../../features/on_boarding/domain/usecases/save_tracking_reason_usecase.
     as _i631;
 import '../../features/on_boarding/domain/usecases/save_weekly_spending_usecase.dart'
     as _i1060;
+import '../../features/transaction/data/data_source/transaction_local_data_source.dart'
+    as _i215;
+import '../../features/transaction/data/data_source/transaction_remote_data_source.dart'
+    as _i88;
+import '../../features/transaction/data/repositories/transaction_repository_impl.dart'
+    as _i600;
+import '../../features/transaction/domain/repositories/transaction_repository_contract.dart'
+    as _i266;
+import '../../features/transaction/domain/use_cases/add_transaction_usecase.dart'
+    as _i5;
+import '../../features/transaction/domain/use_cases/get_transaction_usecase.dart'
+    as _i934;
+import '../../features/transaction/domain/use_cases/sync_transactions_usecase.dart'
+    as _i91;
+import '../modules/app_module.dart' as _i781;
 import '../modules/hive_module.dart' as _i732;
 import '../modules/supabase_module.dart' as _i742;
+import 'network_info_service.dart' as _i236;
 import 'supabase_error_handler_service.dart' as _i38;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -77,8 +94,10 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    final appModule = _$AppModule();
     final hiveModule = _$HiveModule();
     final supabaseModule = _$SupabaseModule();
+    gh.lazySingleton<_i895.Connectivity>(() => appModule.connectivity);
     gh.lazySingleton<_i965.HiveInterface>(() => hiveModule.hive);
     gh.lazySingleton<_i454.SupabaseClient>(() => supabaseModule.supabaseClient);
     gh.lazySingleton<_i38.SupabaseErrorHandlerService>(
@@ -99,8 +118,16 @@ extension GetItInjectableX on _i174.GetIt {
         supabaseClient: gh<_i454.SupabaseClient>(),
       ),
     );
+    gh.lazySingleton<_i88.TransactionRemoteDataSource>(
+      () => _i88.TransactionRemoteDataSource(
+        supabaseClient: gh<_i454.SupabaseClient>(),
+      ),
+    );
     gh.lazySingleton<_i903.OnBoardingLocalDataSource>(
       () => _i903.OnBoardingLocalDataSourceImpl(gh<_i965.HiveInterface>()),
+    );
+    gh.lazySingleton<_i236.NetworkInfo>(
+      () => _i236.NetworkInfoImpl(gh<_i895.Connectivity>()),
     );
     gh.lazySingleton<_i280.AuthLocalDataSource>(
       () => _i280.AuthLocalDataSourceImpl(gh<_i965.HiveInterface>()),
@@ -111,12 +138,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i428.GoalLocalDataSource>(
       () => _i428.GoalLocalDataSourceImpl(gh<_i965.HiveInterface>()),
     );
-    gh.lazySingleton<_i456.GoalRepositoryContract>(
-      () => _i951.GoalRepositoryImpl(
-        remoteGoalDataSource: gh<_i598.RemoteGoalDataSource>(),
-        supabaseErrorHandlerService: gh<_i38.SupabaseErrorHandlerService>(),
-        localGoalDataSource: gh<_i1004.LocalGoalDataSource>(),
-      ),
+    gh.lazySingleton<_i215.TransactionLocalDataSource>(
+      () => _i215.TransactionLocalDataSourceImpl(gh<_i965.HiveInterface>()),
     );
     gh.factoryParam<
       _i392.GetDailyAdviceUseCase,
@@ -129,21 +152,38 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i903.OnBoardingLocalDataSource>(),
       ),
     );
+    gh.lazySingleton<_i266.TransactionRepositoryContract>(
+      () => _i600.TransactionRepositoryImpl(
+        remoteDataSource: gh<_i88.TransactionRemoteDataSource>(),
+        localDataSource: gh<_i215.TransactionLocalDataSource>(),
+        supabaseErrorHandlerService: gh<_i38.SupabaseErrorHandlerService>(),
+        networkInfo: gh<_i236.NetworkInfo>(),
+      ),
+    );
+    gh.lazySingleton<_i456.GoalRepositoryContract>(
+      () => _i951.GoalRepositoryImpl(
+        remoteGoalDataSource: gh<_i598.RemoteGoalDataSource>(),
+        supabaseErrorHandlerService: gh<_i38.SupabaseErrorHandlerService>(),
+        localGoalDataSource: gh<_i1004.LocalGoalDataSource>(),
+        networkInfo: gh<_i236.NetworkInfo>(),
+      ),
+    );
     gh.lazySingleton<_i394.AddGoalUseCase>(
       () => _i394.AddGoalUseCase(gh<_i155.GoalRepository>()),
-    );
-    gh.lazySingleton<_i718.HomeRepositoryContract>(
-      () => _i412.HomeRepositoryImpl(
-        remoteHomeDataSource: gh<_i190.RemoteHomeDataSource>(),
-        supabaseErrorHandlerService: gh<_i38.SupabaseErrorHandlerService>(),
-        authLocalDataSource: gh<_i280.AuthLocalDataSource>(),
-      ),
     );
     gh.lazySingleton<_i273.AuthRepositoryContract>(
       () => _i153.AuthRepositoryImpl(
         remoteDataSource: gh<_i182.AuthRemoteDataSource>(),
         localDataSource: gh<_i280.AuthLocalDataSource>(),
         supabaseErrorHandlerService: gh<_i38.SupabaseErrorHandlerService>(),
+      ),
+    );
+    gh.lazySingleton<_i718.HomeRepositoryContract>(
+      () => _i412.HomeRepositoryImpl(
+        remoteHomeDataSource: gh<_i190.RemoteHomeDataSource>(),
+        supabaseErrorHandlerService: gh<_i38.SupabaseErrorHandlerService>(),
+        authLocalDataSource: gh<_i280.AuthLocalDataSource>(),
+        networkInfo: gh<_i236.NetworkInfo>(),
       ),
     );
     gh.lazySingleton<_i874.OnBoardingRepository>(
@@ -156,6 +196,21 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i861.GetGoalUseCase>(
       () => _i861.GetGoalUseCase(
         goalRepositoryContract: gh<_i456.GoalRepositoryContract>(),
+      ),
+    );
+    gh.lazySingleton<_i5.AddTransactionUseCase>(
+      () => _i5.AddTransactionUseCase(
+        repository: gh<_i266.TransactionRepositoryContract>(),
+      ),
+    );
+    gh.lazySingleton<_i934.GetTransactionUseCase>(
+      () => _i934.GetTransactionUseCase(
+        repository: gh<_i266.TransactionRepositoryContract>(),
+      ),
+    );
+    gh.lazySingleton<_i91.SyncTransactionsUseCase>(
+      () => _i91.SyncTransactionsUseCase(
+        repository: gh<_i266.TransactionRepositoryContract>(),
       ),
     );
     gh.lazySingleton<_i519.GetProfileUseCase>(
@@ -185,6 +240,8 @@ extension GetItInjectableX on _i174.GetIt {
     return this;
   }
 }
+
+class _$AppModule extends _i781.AppModule {}
 
 class _$HiveModule extends _i732.HiveModule {}
 

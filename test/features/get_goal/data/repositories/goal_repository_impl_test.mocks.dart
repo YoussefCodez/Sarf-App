@@ -6,6 +6,8 @@
 import 'dart:async' as _i4;
 
 import 'package:finance_tracking/config/models/remote_goal_model.dart' as _i5;
+import 'package:finance_tracking/config/services/network_info_service.dart'
+    as _i10;
 import 'package:finance_tracking/config/services/supabase_error_handler_service.dart'
     as _i8;
 import 'package:finance_tracking/features/get_goal/data/data_source/local_goal_data_source.dart'
@@ -87,6 +89,14 @@ class MockLocalGoalDataSource extends _i1.Mock
           as _i4.Future<void>);
 
   @override
+  _i4.Future<_i7.HomeLocalGoalModel?> getGoal() =>
+      (super.noSuchMethod(
+            Invocation.method(#getGoal, []),
+            returnValue: _i4.Future<_i7.HomeLocalGoalModel?>.value(),
+          )
+          as _i4.Future<_i7.HomeLocalGoalModel?>);
+
+  @override
   _i4.Future<void> clearGoal() =>
       (super.noSuchMethod(
             Invocation.method(#clearGoal, []),
@@ -115,4 +125,21 @@ class MockSupabaseErrorHandlerService extends _i1.Mock
             ),
           )
           as String);
+}
+
+/// A class which mocks [NetworkInfo].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNetworkInfo extends _i1.Mock implements _i10.NetworkInfo {
+  MockNetworkInfo() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<bool> get isConnected =>
+      (super.noSuchMethod(
+            Invocation.getter(#isConnected),
+            returnValue: _i4.Future<bool>.value(false),
+          )
+          as _i4.Future<bool>);
 }

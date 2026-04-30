@@ -26,14 +26,18 @@ class GoalTrackerWidget extends StatelessWidget {
         builder: (context, ref, child) {
           final state = ref.watch(getGoalProvider);
           final profileState = ref.watch(getProfileProvider);
-          final profile = profileState is GetProfileSuccess ? profileState.userProfileEntity : null;
+          final profile = profileState is GetProfileSuccess
+              ? profileState.userProfileEntity
+              : null;
           final currentMoneyStr = profile?.currentMoney ?? "0";
           final currentMoney = double.tryParse(currentMoneyStr) ?? 0.0;
-          final percentage = state is GetGoalSuccess && state.goalEntity.price > 0 
-              ? (currentMoney / state.goalEntity.price) * 100 
+          final percentage =
+              state is GetGoalSuccess && state.goalEntity.price > 0
+              ? (currentMoney / state.goalEntity.price) * 100
               : 0.0;
           return Skeletonizer(
-            enabled: state is GetGoalLoading || profileState is GetProfileLoading,
+            enabled:
+                state is GetGoalLoading || profileState is GetProfileLoading,
             child: Column(
               crossAxisAlignment: .start,
               children: [
@@ -107,12 +111,12 @@ class GoalTrackerWidget extends StatelessWidget {
                     );
                   },
                 ),
-                
+
                 Gap(12.h),
                 LinearProgressIndicator(
                   value: percentage / 100,
                   color: AppColors.primaryColor,
-                  backgroundColor: AppColors.progressColor,
+                  backgroundColor: AppColors.onScreenColor,
                   borderRadius: BorderRadius.circular(12.r),
                   minHeight: 10.h,
                 ),

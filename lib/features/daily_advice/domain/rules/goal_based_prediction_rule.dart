@@ -20,7 +20,12 @@ class GoalBasedPredictionRule implements AdviceRule {
 
     double savingPerWeek = financeData.weeklySpend * savingRate;
     int weeksToGoal = (financeData.goalAmount / savingPerWeek).ceil();
-    
-    return "Keep it up! At an optimal savings rate, you could reach your goal of ${financeData.goalAmount.toInt()} EGP in just $weeksToGoal weeks.";
+    switch (weeksToGoal) {
+      case >= 14:
+        double monthsToGoal = weeksToGoal / 4.345;
+        return "Keep it up! At an optimal savings rate, you could reach your goal of ${financeData.goalAmount.toInt()} EGP in just ${monthsToGoal.toInt()} months.";
+      default:
+        return "Keep it up! At an optimal savings rate, you could reach your goal of ${financeData.goalAmount.toInt()} EGP in just $weeksToGoal weeks.";
+    }
   }
 }

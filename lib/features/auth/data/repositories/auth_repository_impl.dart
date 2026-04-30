@@ -127,6 +127,7 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
 
       return Right(AuthUserModel.fromSupabase(response.user!.toJson()));
     } catch (e) {
+      printOutPut(e);
       return Left(supabaseErrorHandlerService.handle(e));
     }
   }

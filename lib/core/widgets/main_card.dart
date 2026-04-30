@@ -39,11 +39,16 @@ class MainCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: .start,
               children: [
-                Text(title, style: Theme.of(context).textTheme.bodySmall),
                 Text(
-                  subTitle,
+                  title[0].toUpperCase() + title.substring(1),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.whiteColor,
+                    fontSize: 20.sp,
+                  ),
+                ),
+                Text(
+                  subTitle,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontSize: subTitleFontSize.sp,
                   ),
                 ),

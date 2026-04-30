@@ -6,12 +6,15 @@ import 'package:hive_ce/hive_ce.dart';
 import 'package:finance_tracking/features/auth/data/models/local_user_profile_model.dart';
 import 'package:finance_tracking/features/get_goal/data/models/home_local_goal_model.dart';
 import 'package:finance_tracking/features/on_boarding/data/models/local_goal_model.dart';
+import 'package:finance_tracking/features/transaction/data/models/local_transaction_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(HomeLocalGoalModelAdapter());
     registerAdapter(LocalGoalModelAdapter());
+    registerAdapter(LocalTransactionModelAdapter());
     registerAdapter(LocalUserProfileModelAdapter());
+    registerAdapter(SyncStatusAdapter());
   }
 }
 
@@ -19,6 +22,8 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(HomeLocalGoalModelAdapter());
     registerAdapter(LocalGoalModelAdapter());
+    registerAdapter(LocalTransactionModelAdapter());
     registerAdapter(LocalUserProfileModelAdapter());
+    registerAdapter(SyncStatusAdapter());
   }
 }

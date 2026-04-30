@@ -1,7 +1,9 @@
+import 'package:finance_tracking/app_routes.dart';
 import 'package:finance_tracking/core/app_strings/home_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeTransactionHeader extends StatelessWidget {
   const HomeTransactionHeader({super.key});
@@ -9,8 +11,8 @@ class HomeTransactionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: .spaceBetween,
-      crossAxisAlignment: .center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           HomeStrings.recentTransactions,
@@ -20,7 +22,7 @@ class HomeTransactionHeader extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            //TODO: Navigate to transactions screen
+            context.push(AppRoutes.transactionHistory);
           },
           child: Text(
             HomeStrings.viewAll,

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:finance_tracking/config/entities/user_profile_entity.dart';
 import 'package:finance_tracking/config/models/remote_user_profile_model.dart';
+import 'package:finance_tracking/config/services/network_info_service.dart';
 import 'package:finance_tracking/config/services/supabase_error_handler_service.dart';
 import 'package:finance_tracking/features/auth/data/data_source/auth_local_data_source.dart';
 import 'package:finance_tracking/features/auth/data/models/local_user_profile_model.dart';
@@ -14,6 +15,7 @@ import 'package:test/test.dart';
   RemoteHomeDataSource,
   AuthLocalDataSource,
   SupabaseErrorHandlerService,
+  NetworkInfo,
 ])
 import 'home_repository_impl_test.mocks.dart';
 
@@ -22,15 +24,17 @@ void main() {
   late MockRemoteHomeDataSource mockRemoteHomeDataSource;
   late MockAuthLocalDataSource mockAuthLocalDataSource;
   late MockSupabaseErrorHandlerService mockSupabaseErrorHandlerService;
-
+  late MockNetworkInfo networkInfo;
   setUp(() {
     mockRemoteHomeDataSource = MockRemoteHomeDataSource();
     mockAuthLocalDataSource = MockAuthLocalDataSource();
     mockSupabaseErrorHandlerService = MockSupabaseErrorHandlerService();
+    networkInfo = MockNetworkInfo();
     homeRepositoryImpl = HomeRepositoryImpl(
       remoteHomeDataSource: mockRemoteHomeDataSource,
       authLocalDataSource: mockAuthLocalDataSource,
       supabaseErrorHandlerService: mockSupabaseErrorHandlerService,
+      networkInfo: networkInfo,
     );
   });
 
@@ -60,6 +64,8 @@ void main() {
     'getProfile should return user profile and save it locally when remote call is successful',
     () async {
       // Arrange
+      bool isConnected = true;
+      when(networkInfo.isConnected).thenAnswer((_) async => isConnected);
       when(
         mockRemoteHomeDataSource.getProfile(),
       ).thenAnswer((_) async => tRemoteUserProfile);
@@ -82,8 +88,10 @@ void main() {
     'getProfile should return cached profile when remote call fails',
     () async {
       // Arrange
+      bool isConnected = true;
+      when(networkInfo.isConnected).thenAnswer((_) async => isConnected);
       when(mockRemoteHomeDataSource.getProfile()).thenThrow(Exception());
-      when(mockAuthLocalDataSource.getUserProfile()).thenReturn(
+      when(mockAuthLocalDataSource.getUserProfile()).thenAnswer((_) async =>
         LocalUserProfileModel(
           id: '1',
           name: 'John Doe',
@@ -109,8 +117,10 @@ void main() {
     () async {
       // Arrange
       final tException = Exception("Network Error");
+      bool isConnected = true;
+      when(networkInfo.isConnected).thenAnswer((_) async => isConnected);
       when(mockRemoteHomeDataSource.getProfile()).thenThrow(tException);
-      when(mockAuthLocalDataSource.getUserProfile()).thenReturn(null);
+      when(mockAuthLocalDataSource.getUserProfile()).thenAnswer((_) async => null);
       when(
         mockSupabaseErrorHandlerService.handle(tException),
       ).thenReturn("Error Message");

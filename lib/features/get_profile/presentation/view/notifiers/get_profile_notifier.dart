@@ -11,9 +11,8 @@ class GetProfileNotifier extends Notifier<GetProfileStates> {
   }
 
   Future<void> getProfile() async {
-    
     state = GetProfileLoading();
-    
+
     final result = await _getProfileUseCase.call();
     result.fold(
       (error) => state = GetProfileError(error: error),

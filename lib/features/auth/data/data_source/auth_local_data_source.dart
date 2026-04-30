@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 
 abstract interface class AuthLocalDataSource {
   Future<void> saveUserProfile(LocalUserProfileModel userProfile);
-  LocalUserProfileModel? getUserProfile();
+  Future<LocalUserProfileModel?> getUserProfile();
   Future<void> clearUserProfile();
 }
 
@@ -23,9 +23,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  LocalUserProfileModel? getUserProfile() {
-    if (!_hive.isBoxOpen(_boxName)) return null;
-    return _hive.box(_boxName).get(_userKey);
+  Future<LocalUserProfileModel?> getUserProfile() async {
+    final box = await _hive.openBox(_boxName);
+    return box.get(_userKey);
   }
 
   @override

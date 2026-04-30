@@ -186,6 +186,14 @@ class MockAuthLocalDataSource extends _i1.Mock
           as _i4.Future<void>);
 
   @override
+  _i4.Future<_i8.LocalUserProfileModel?> getUserProfile() =>
+      (super.noSuchMethod(
+            Invocation.method(#getUserProfile, []),
+            returnValue: _i4.Future<_i8.LocalUserProfileModel?>.value(),
+          )
+          as _i4.Future<_i8.LocalUserProfileModel?>);
+
+  @override
   _i4.Future<void> clearUserProfile() =>
       (super.noSuchMethod(
             Invocation.method(#clearUserProfile, []),

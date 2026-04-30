@@ -10,7 +10,12 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-@GenerateMocks([AuthRemoteDataSource, AuthLocalDataSource, User, SupabaseErrorHandlerService])
+@GenerateMocks([
+  AuthRemoteDataSource,
+  AuthLocalDataSource,
+  User,
+  SupabaseErrorHandlerService,
+])
 import 'auth_repository_impl_test.mocks.dart';
 
 void main() {
@@ -207,6 +212,10 @@ void main() {
         ),
       ).thenThrow(Exception("Failed to insert data"));
 
+      when(
+        mockSupabaseErrorHandlerService.handle(any),
+      ).thenReturn("Failed to insert data");
+
       // 2. Act
       final result = await repository.signUpWithEmailAndPassword(
         email: tEmail,
@@ -273,9 +282,16 @@ void main() {
 
     test("should return error when sign in failed", () async {
       // 1. Arrange
+      final tException = Exception('Sign in failed');
+      final tErrorMessage = 'An error occurred';
+
       when(
         mockRemoteDataSource.signIn(email: tEmail, password: tPassword),
-      ).thenThrow(Exception("Failed to sign in"));
+      ).thenThrow(tException);
+
+      when(
+        mockSupabaseErrorHandlerService.handle(any),
+      ).thenReturn(tErrorMessage);
 
       // 2. Act
       final result = await repository.signInWithEmailAndPassword(
@@ -285,9 +301,17 @@ void main() {
 
       // 3. Assert
       expect(result.isLeft(), true);
+      result.fold(
+        (failureMessage) => expect(failureMessage, tErrorMessage),
+        (_) => fail('Should not return AuthUserEntity'),
+      );
 
       verify(
         mockRemoteDataSource.signIn(email: tEmail, password: tPassword),
+      ).called(1);
+
+      verify(
+        mockSupabaseErrorHandlerService.handle(any),
       ).called(1);
     });
   });

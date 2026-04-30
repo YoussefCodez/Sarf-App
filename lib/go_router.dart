@@ -5,6 +5,7 @@ import 'package:finance_tracking/features/auth/presentation/screens/sign_up_scre
 import 'package:finance_tracking/features/main_layout/presentation/screens/main_layout_screen.dart';
 import 'package:finance_tracking/features/on_boarding/data/datasources/on_boarding_local_datasource.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/screens/on_boarding_screen.dart';
+import 'package:finance_tracking/features/transaction/presentation/screens/transaction_history_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -35,6 +36,10 @@ abstract class AppRouter {
       GoRoute(
         path: AppRoutes.homeScreen,
         builder: (context, state) => const MainLayoutScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.transactionHistory,
+        builder: (context, state) => const TransactionHistoryScreen(),
       ),
     ],
   );
