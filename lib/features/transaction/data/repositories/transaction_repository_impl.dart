@@ -11,10 +11,13 @@ import 'package:finance_tracking/features/transaction/domain/repositories/transa
 import 'package:injectable/injectable.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:finance_tracking/features/auth/data/data_source/auth_local_data_source.dart';
+
 @LazySingleton(as: TransactionRepositoryContract)
 class TransactionRepositoryImpl implements TransactionRepositoryContract {
   final TransactionRemoteDataSource remoteDataSource;
   final TransactionLocalDataSource localDataSource;
+  final AuthLocalDataSource authLocalDataSource;
   final SupabaseErrorHandlerService supabaseErrorHandlerService;
   final NetworkInfo networkInfo;
   final Uuid _uuid = const Uuid();
@@ -22,9 +25,24 @@ class TransactionRepositoryImpl implements TransactionRepositoryContract {
   TransactionRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
+    required this.authLocalDataSource,
     required this.supabaseErrorHandlerService,
     required this.networkInfo,
   });
+
+  Future<void> _updateLocalProfileBalance(double amount, String type) async {
+    final profile = await authLocalDataSource.getUserProfile();
+    if (profile != null) {
+      final double currentMoney = double.tryParse(profile.currentMoney) ?? 0.0;
+      final double newMoney = type.toLowerCase() == 'income' 
+          ? currentMoney + amount 
+          : currentMoney - amount;
+      
+      await authLocalDataSource.saveUserProfile(
+        profile.copyWith(currentMoney: newMoney.toString()),
+      );
+    }
+  }
 
   @override
   Future<Either<String, void>> addTransaction({
@@ -53,9 +71,15 @@ class TransactionRepositoryImpl implements TransactionRepositoryContract {
     try {
       if (isOnline) {
         await remoteDataSource.insertTransaction(data: model);
+        await remoteDataSource.updateRemoteProfileBalance(
+          userId: userId,
+          amount: price,
+          type: type,
+        );
         await localDataSource.saveTransactions([
           model.toLocalModel().copyWith(syncStatus: SyncStatus.synced),
         ]);
+        await _updateLocalProfileBalance(price, type);
         return const Right(null);
       } else {
         await localDataSource.saveTransactions([
@@ -64,6 +88,7 @@ class TransactionRepositoryImpl implements TransactionRepositoryContract {
             syncStatus: SyncStatus.pending,
           ),
         ]);
+        await _updateLocalProfileBalance(price, type);
         return const Right(null);
       }
     } catch (e) {
@@ -95,8 +120,8 @@ class TransactionRepositoryImpl implements TransactionRepositoryContract {
               (e) => e.toLocalModel().copyWith(syncStatus: SyncStatus.synced),
             )
             .toList();
+        await localDataSource.clearTransactions();
         await localDataSource.saveTransactions(localModels);
-
         return Right(entities);
       } else {
         final localResponse = await localDataSource.getTransactions(
@@ -128,21 +153,28 @@ class TransactionRepositoryImpl implements TransactionRepositoryContract {
 
       if (pendingTransactions.isEmpty) return const Right(null);
 
-      final syncTasks = pendingTransactions.map((tx) async {
+      final String userId = remoteDataSource.getUserId();
+
+      for (var tx in pendingTransactions) {
         try {
           await remoteDataSource.insertTransaction(data: tx.toModel());
+          await remoteDataSource.updateRemoteProfileBalance(
+            userId: userId,
+            amount: tx.price,
+            type: tx.type,
+          );
           await localDataSource.saveTransactions([
             tx.copyWith(syncStatus: SyncStatus.synced),
           ]);
         } catch (e) {
+          printOutPut("Failed to sync transaction ${tx.id}: $e");
           await localDataSource.saveTransactions([
             tx.copyWith(syncStatus: SyncStatus.failed),
           ]);
           rethrow;
         }
-      });
+      }
 
-      await Future.wait(syncTasks);
       return const Right(null);
     } catch (e) {
       printOutPut(e);

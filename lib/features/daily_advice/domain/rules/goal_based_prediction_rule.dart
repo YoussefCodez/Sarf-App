@@ -3,8 +3,8 @@ import 'package:finance_tracking/features/daily_advice/domain/rules/advice_rule.
 
 class GoalBasedPredictionRule implements AdviceRule {
   @override
-  bool isApplicable(UserFinanceEntity financeData) {
-    return financeData.goalAmount > 0 && financeData.weeklySpend > 0;
+  bool isApplicable(UserFinanceEntity financeData, bool haveGoal) {
+    return financeData.goalAmount > 0 && financeData.weeklySpend > 0 && haveGoal;
   }
 
   @override

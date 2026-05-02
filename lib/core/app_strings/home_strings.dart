@@ -6,4 +6,6 @@ abstract class HomeStrings {
   static const String recentTransactions = "Recent Transactions";
   static const String viewAll = "View All";
   static const String yourMainGoal = "Your Main Goal";
+  static const String currentMoney = "Current Money";
+  static const String totalSpent = "Total Spent";
 }

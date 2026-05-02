@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:finance_tracking/config/services/network_info_service.dart';
 import 'package:finance_tracking/config/services/supabase_error_handler_service.dart';
+import 'package:finance_tracking/features/auth/data/models/local_user_profile_model.dart';
 import 'package:finance_tracking/features/transaction/data/data_source/transaction_local_data_source.dart';
 import 'package:finance_tracking/features/transaction/data/data_source/transaction_remote_data_source.dart';
 import 'package:finance_tracking/features/transaction/data/models/local_transaction_model.dart';
@@ -11,9 +12,12 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:finance_tracking/features/auth/data/data_source/auth_local_data_source.dart';
+
 @GenerateMocks([
   TransactionRemoteDataSource,
   TransactionLocalDataSource,
+  AuthLocalDataSource,
   SupabaseErrorHandlerService,
   NetworkInfo,
   Uuid,
@@ -24,18 +28,21 @@ void main() {
   late TransactionRepositoryImpl transactionRepositoryImpl;
   late MockTransactionRemoteDataSource mockRemoteTransactionDataSource;
   late MockTransactionLocalDataSource mockTransactionLocalDataSource;
+  late MockAuthLocalDataSource mockAuthLocalDataSource;
   late MockSupabaseErrorHandlerService mockSupabaseErrorHandlerService;
   late MockNetworkInfo networkInfo;
   late MockUuid uuid;
   setUp(() {
     mockRemoteTransactionDataSource = MockTransactionRemoteDataSource();
     mockTransactionLocalDataSource = MockTransactionLocalDataSource();
+    mockAuthLocalDataSource = MockAuthLocalDataSource();
     mockSupabaseErrorHandlerService = MockSupabaseErrorHandlerService();
     networkInfo = MockNetworkInfo();
     uuid = MockUuid();
     transactionRepositoryImpl = TransactionRepositoryImpl(
       remoteDataSource: mockRemoteTransactionDataSource,
       localDataSource: mockTransactionLocalDataSource,
+      authLocalDataSource: mockAuthLocalDataSource,
       supabaseErrorHandlerService: mockSupabaseErrorHandlerService,
       networkInfo: networkInfo,
     );
@@ -56,6 +63,17 @@ void main() {
       when(
         mockTransactionLocalDataSource.saveTransactions(any),
       ).thenAnswer((_) async => {});
+      when(mockAuthLocalDataSource.getUserProfile()).thenAnswer(
+        (_) async => LocalUserProfileModel(
+          id: '1',
+          name: 'Test',
+          email: 'test@test.com',
+          weeklySpending: '100',
+          forGoal: true,
+          createdAt: DateTime.now(),
+          currentMoney: "22",
+        ),
+      );
 
       // Act
       final result = await transactionRepositoryImpl.addTransaction(
@@ -126,7 +144,17 @@ void main() {
       when(
         mockTransactionLocalDataSource.saveTransactions(any),
       ).thenAnswer((_) async => {});
-
+      when(mockAuthLocalDataSource.getUserProfile()).thenAnswer(
+        (_) async => LocalUserProfileModel(
+          id: '1',
+          name: 'Test',
+          email: 'test@test.com',
+          weeklySpending: '100',
+          forGoal: true,
+          createdAt: DateTime.now(),
+          currentMoney: "22",
+        ),
+      );
       // Act
       final result = await transactionRepositoryImpl.addTransaction(
         name: 'Test',
@@ -230,7 +258,7 @@ void main() {
       when(
         mockSupabaseErrorHandlerService.handle(any),
       ).thenReturn('Failed to get transactions');
-
+      when(mockRemoteTransactionDataSource.getUserId()).thenReturn('1');
       // Act
       final result = await transactionRepositoryImpl.getTransactions();
 
@@ -257,6 +285,7 @@ void main() {
   group('syncTransactions', () {
     test('should sync pending transactions successfully', () async {
       // Arrange
+
       final tx = LocalTransactionModel(
         id: '1',
         userId: 'u',
@@ -268,7 +297,8 @@ void main() {
         note: null,
         syncStatus: SyncStatus.pending,
       );
-
+      when(networkInfo.isConnected).thenAnswer((_) async => true);
+      when(mockRemoteTransactionDataSource.getUserId()).thenReturn('1');
       when(
         mockTransactionLocalDataSource.getTransactions(),
       ).thenAnswer((_) async => [tx]);
@@ -276,6 +306,14 @@ void main() {
       when(
         mockRemoteTransactionDataSource.insertTransaction(
           data: anyNamed('data'),
+        ),
+      ).thenAnswer((_) async => Future.value());
+
+      when(
+        mockRemoteTransactionDataSource.updateRemoteProfileBalance(
+          userId: anyNamed('userId'),
+          amount: anyNamed('amount'),
+          type: anyNamed('type'),
         ),
       ).thenAnswer((_) async => Future.value());
 
@@ -292,6 +330,14 @@ void main() {
       verify(
         mockRemoteTransactionDataSource.insertTransaction(
           data: anyNamed('data'),
+        ),
+      ).called(1);
+
+      verify(
+        mockRemoteTransactionDataSource.updateRemoteProfileBalance(
+          userId: anyNamed('userId'),
+          amount: anyNamed('amount'),
+          type: anyNamed('type'),
         ),
       ).called(1);
 
@@ -343,11 +389,11 @@ void main() {
         note: null,
         syncStatus: SyncStatus.pending,
       );
-
+      when(networkInfo.isConnected).thenAnswer((_) async => false);
       when(
         mockTransactionLocalDataSource.getTransactions(),
       ).thenAnswer((_) async => [tx]);
-
+      when(mockRemoteTransactionDataSource.getUserId()).thenReturn('1');
       when(
         mockRemoteTransactionDataSource.insertTransaction(
           data: anyNamed('data'),
@@ -368,15 +414,15 @@ void main() {
       // Assert
       expect(result.isLeft(), true);
 
-      result.fold(
-        (l) => expect(l, 'sync failed'),
-        (r) => fail('Expected Left'),
-      );
-
+      verify(
+        mockRemoteTransactionDataSource.insertTransaction(
+          data: anyNamed('data'),
+        ),
+      ).called(1);
       verify(mockTransactionLocalDataSource.saveTransactions(any)).called(1);
     });
 
-    test('should sync multiple pending transactions in parallel', () async {
+    test('should sync multiple pending transactions sequentially', () async {
       // Arrange
       final tx1 = LocalTransactionModel(
         id: '1',
@@ -391,6 +437,7 @@ void main() {
       );
 
       final tx2 = tx1.copyWith(id: '2');
+      when(mockRemoteTransactionDataSource.getUserId()).thenReturn('1');
 
       when(
         mockTransactionLocalDataSource.getTransactions(),
@@ -399,6 +446,14 @@ void main() {
       when(
         mockRemoteTransactionDataSource.insertTransaction(
           data: anyNamed('data'),
+        ),
+      ).thenAnswer((_) async => Future.value());
+
+      when(
+        mockRemoteTransactionDataSource.updateRemoteProfileBalance(
+          userId: anyNamed('userId'),
+          amount: anyNamed('amount'),
+          type: anyNamed('type'),
         ),
       ).thenAnswer((_) async => Future.value());
 
@@ -415,6 +470,14 @@ void main() {
       verify(
         mockRemoteTransactionDataSource.insertTransaction(
           data: anyNamed('data'),
+        ),
+      ).called(2);
+
+      verify(
+        mockRemoteTransactionDataSource.updateRemoteProfileBalance(
+          userId: anyNamed('userId'),
+          amount: anyNamed('amount'),
+          type: anyNamed('type'),
         ),
       ).called(2);
     });

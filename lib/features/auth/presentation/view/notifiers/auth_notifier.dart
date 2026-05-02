@@ -11,6 +11,8 @@ class AuthNotifier extends StateNotifier<AuthStates> {
   final SignupUsecase signUpUseCase;
   final LoginUsecase loginUseCase;
   final LogoutUsecase logoutUseCase;
+  String _currentUserId = '';
+  String get currentUserId => _currentUserId;
 
   AuthNotifier({
     required this.signUpUseCase,
@@ -38,11 +40,13 @@ class AuthNotifier extends StateNotifier<AuthStates> {
   }
 
   Future<void> _logout() async {
+    state = LogoutLoading();
     try {
       await logoutUseCase();
-      state = AuthInitial();
+      _currentUserId = '';
+      state = LogoutSuccess();
     } catch (e) {
-      state = LoginError(errorMessage: e.toString());
+      state = LogoutError(errorMessage: e.toString());
     }
   }
 
@@ -62,7 +66,10 @@ class AuthNotifier extends StateNotifier<AuthStates> {
       );
       result.fold(
         (failure) => state = SignUpError(errorMessage: failure),
-        (user) => state = SignUpSuccess(user: user),
+        (user) {
+          _currentUserId = user.id;
+          state = SignUpSuccess(user: user);
+        },
       );
     } catch (e) {
       state = SignUpError(errorMessage: e.toString());
@@ -75,7 +82,10 @@ class AuthNotifier extends StateNotifier<AuthStates> {
       final result = await loginUseCase(email: email, password: password);
       result.fold(
         (failure) => state = LoginError(errorMessage: failure),
-        (user) => state = LoginSuccess(user: user),
+        (user) {
+          _currentUserId = user.id;
+          state = LoginSuccess(user: user);
+        },
       );
     } catch (e) {
       state = LoginError(errorMessage: e.toString());

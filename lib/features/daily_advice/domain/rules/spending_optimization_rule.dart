@@ -3,8 +3,7 @@ import 'package:finance_tracking/features/daily_advice/domain/rules/advice_rule.
 
 class SpendingOptimizationRule implements AdviceRule {
   @override
-  bool isApplicable(UserFinanceEntity financeData) {
-    // Applicable if the user spends more than 3000 EGP per week
+  bool isApplicable(UserFinanceEntity financeData, bool haveGoal) {
     return financeData.weeklySpend > 3000;
   }
 

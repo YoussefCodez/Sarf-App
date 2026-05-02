@@ -12,7 +12,7 @@ class GetDailyAdviceUseCase {
   /// Executes the core logic. Time complexity is O(1) mostly for access after filtering.
   String execute(UserFinanceEntity financeData) {
     // 1. Filter out rules that are not applicable for the user's current context
-    final applicableRules = rules.where((rule) => rule.isApplicable(financeData)).toList();
+    final applicableRules = rules.where((rule) => rule.isApplicable(financeData, financeData.haveGoal)).toList();
 
     if (applicableRules.isEmpty) {
       return "Keep tracking your expenses to unlock personalized daily advice!";

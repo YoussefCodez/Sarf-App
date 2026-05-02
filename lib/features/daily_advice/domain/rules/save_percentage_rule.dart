@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 class SavePercentageRule implements AdviceRule {
   @override
-  bool isApplicable(UserFinanceEntity financeData) {
+  bool isApplicable(UserFinanceEntity financeData, bool haveGoal) {
     return financeData.weeklySpend > 0;
   }
 

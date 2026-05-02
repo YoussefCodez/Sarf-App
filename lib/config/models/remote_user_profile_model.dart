@@ -47,15 +47,24 @@ class RemoteUserProfileModel extends UserProfileEntity {
     );
   }
 
-  RemoteUserProfileModel copyWith({String? id, String? currentMoney}) {
+  @override
+  RemoteUserProfileModel copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? weeklySpending,
+    bool? forGoal,
+    String? currentMoney,
+    DateTime? createdAt,
+  }) {
     return RemoteUserProfileModel(
       id: id ?? this.id,
-      name: name,
-      email: email,
-      weeklySpending: weeklySpending,
-      forGoal: forGoal,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      weeklySpending: weeklySpending ?? this.weeklySpending,
+      forGoal: forGoal ?? this.forGoal,
       currentMoney: currentMoney ?? this.currentMoney,
-      createdAt: createdAt,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

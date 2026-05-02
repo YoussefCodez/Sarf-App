@@ -13,6 +13,8 @@ class MainCard extends StatelessWidget {
     this.subTitleFontSize = 24,
     this.trailing,
     this.svg = "",
+    this.isNoted = false,
+    this.note = "",
   });
 
   final String title;
@@ -21,6 +23,8 @@ class MainCard extends StatelessWidget {
   final double subTitleFontSize;
   final Widget leading;
   final Widget? trailing;
+  final String note;
+  final bool isNoted;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +52,12 @@ class MainCard extends StatelessWidget {
                 ),
                 Text(
                   subTitle,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: subTitleFontSize.sp,
+                  ),
+                ),
+                if (isNoted) Text(
+                  "Note: $note",
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontSize: subTitleFontSize.sp,
                   ),

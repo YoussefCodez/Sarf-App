@@ -13,6 +13,8 @@ import 'package:connectivity_plus/connectivity_plus.dart' as _i895;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:hive_ce_flutter/hive_ce_flutter.dart' as _i965;
 import 'package:injectable/injectable.dart' as _i526;
+import 'package:local_auth/local_auth.dart' as _i152;
+import 'package:quick_actions/quick_actions.dart' as _i578;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i454;
 
 import '../../features/auth/data/data_source/auth_local_data_source.dart'
@@ -67,6 +69,22 @@ import '../../features/on_boarding/domain/usecases/save_tracking_reason_usecase.
     as _i631;
 import '../../features/on_boarding/domain/usecases/save_weekly_spending_usecase.dart'
     as _i1060;
+import '../../features/security_and_biometrics/data/data_sources/biometrics_local_data_source.dart'
+    as _i886;
+import '../../features/security_and_biometrics/data/data_sources/biometrics_platform_data_source.dart'
+    as _i400;
+import '../../features/security_and_biometrics/data/repositories/biometrics_repository_impl.dart'
+    as _i669;
+import '../../features/security_and_biometrics/domain/repositories/biometrics_repository_contract.dart'
+    as _i216;
+import '../../features/security_and_biometrics/domain/usecases/authenticate_usecase.dart'
+    as _i578;
+import '../../features/security_and_biometrics/domain/usecases/check_biometrics_support_usecase.dart'
+    as _i665;
+import '../../features/security_and_biometrics/domain/usecases/get_biometrics_status_usecase.dart'
+    as _i88;
+import '../../features/security_and_biometrics/domain/usecases/set_biometrics_enabled_usecase.dart'
+    as _i87;
 import '../../features/transaction/data/data_source/transaction_local_data_source.dart'
     as _i215;
 import '../../features/transaction/data/data_source/transaction_remote_data_source.dart'
@@ -98,10 +116,28 @@ extension GetItInjectableX on _i174.GetIt {
     final hiveModule = _$HiveModule();
     final supabaseModule = _$SupabaseModule();
     gh.lazySingleton<_i895.Connectivity>(() => appModule.connectivity);
+    gh.lazySingleton<_i578.QuickActions>(() => appModule.quickActions);
+    gh.lazySingleton<_i152.LocalAuthentication>(
+      () => appModule.localAuthentication,
+    );
     gh.lazySingleton<_i965.HiveInterface>(() => hiveModule.hive);
     gh.lazySingleton<_i454.SupabaseClient>(() => supabaseModule.supabaseClient);
     gh.lazySingleton<_i38.SupabaseErrorHandlerService>(
       () => _i38.SupabaseErrorHandlerService(),
+    );
+    gh.lazySingleton<_i886.BiometricsLocalDataSource>(
+      () => _i886.BiometricsLocalDataSourceImpl(),
+    );
+    gh.lazySingleton<_i400.BiometricsPlatformDataSource>(
+      () => _i400.BiometricsPlatformDataSourceImpl(
+        auth: gh<_i152.LocalAuthentication>(),
+      ),
+    );
+    gh.lazySingleton<_i216.BiometricsRepositoryContract>(
+      () => _i669.BiometricsRepositoryImpl(
+        localDataSource: gh<_i886.BiometricsLocalDataSource>(),
+        platformDataSource: gh<_i400.BiometricsPlatformDataSource>(),
+      ),
     );
     gh.lazySingleton<_i182.AuthRemoteDataSource>(
       () => _i182.AuthRemoteDataSource(
@@ -121,6 +157,26 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i88.TransactionRemoteDataSource>(
       () => _i88.TransactionRemoteDataSource(
         supabaseClient: gh<_i454.SupabaseClient>(),
+      ),
+    );
+    gh.lazySingleton<_i578.AuthenticateUseCase>(
+      () => _i578.AuthenticateUseCase(
+        repository: gh<_i216.BiometricsRepositoryContract>(),
+      ),
+    );
+    gh.lazySingleton<_i665.CheckBiometricsSupportUseCase>(
+      () => _i665.CheckBiometricsSupportUseCase(
+        repository: gh<_i216.BiometricsRepositoryContract>(),
+      ),
+    );
+    gh.lazySingleton<_i88.GetBiometricsStatusUseCase>(
+      () => _i88.GetBiometricsStatusUseCase(
+        repository: gh<_i216.BiometricsRepositoryContract>(),
+      ),
+    );
+    gh.lazySingleton<_i87.SetBiometricsEnabledUseCase>(
+      () => _i87.SetBiometricsEnabledUseCase(
+        repository: gh<_i216.BiometricsRepositoryContract>(),
       ),
     );
     gh.lazySingleton<_i903.OnBoardingLocalDataSource>(
@@ -150,14 +206,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i300.GoalRepositoryImpl(
         gh<_i428.GoalLocalDataSource>(),
         gh<_i903.OnBoardingLocalDataSource>(),
-      ),
-    );
-    gh.lazySingleton<_i266.TransactionRepositoryContract>(
-      () => _i600.TransactionRepositoryImpl(
-        remoteDataSource: gh<_i88.TransactionRemoteDataSource>(),
-        localDataSource: gh<_i215.TransactionLocalDataSource>(),
-        supabaseErrorHandlerService: gh<_i38.SupabaseErrorHandlerService>(),
-        networkInfo: gh<_i236.NetworkInfo>(),
       ),
     );
     gh.lazySingleton<_i456.GoalRepositoryContract>(
@@ -196,6 +244,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i861.GetGoalUseCase>(
       () => _i861.GetGoalUseCase(
         goalRepositoryContract: gh<_i456.GoalRepositoryContract>(),
+      ),
+    );
+    gh.lazySingleton<_i266.TransactionRepositoryContract>(
+      () => _i600.TransactionRepositoryImpl(
+        remoteDataSource: gh<_i88.TransactionRemoteDataSource>(),
+        localDataSource: gh<_i215.TransactionLocalDataSource>(),
+        authLocalDataSource: gh<_i280.AuthLocalDataSource>(),
+        supabaseErrorHandlerService: gh<_i38.SupabaseErrorHandlerService>(),
+        networkInfo: gh<_i236.NetworkInfo>(),
       ),
     );
     gh.lazySingleton<_i5.AddTransactionUseCase>(

@@ -15,3 +15,5 @@ class GetGoalError extends GetGoalStates {
   final String error;
   GetGoalError({required this.error});
 }
+
+class GetGoalNull extends GetGoalStates {}

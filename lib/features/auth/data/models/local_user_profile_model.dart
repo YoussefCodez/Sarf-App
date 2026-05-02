@@ -55,6 +55,26 @@ class LocalUserProfileModel extends HiveObject with EquatableMixin {
     );
   }
 
+  LocalUserProfileModel copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? weeklySpending,
+    bool? forGoal,
+    DateTime? createdAt,
+    String? currentMoney,
+  }) {
+    return LocalUserProfileModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      weeklySpending: weeklySpending ?? this.weeklySpending,
+      forGoal: forGoal ?? this.forGoal,
+      createdAt: createdAt ?? this.createdAt,
+      currentMoney: currentMoney ?? this.currentMoney,
+    );
+  }
+
   @override
   List<Object?> get props => [id, name, email, weeklySpending, forGoal, createdAt, currentMoney];
 }

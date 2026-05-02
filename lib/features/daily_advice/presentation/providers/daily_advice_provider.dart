@@ -34,6 +34,7 @@ final dailyAdviceProvider = Provider<String>((ref) {
     userId: profile?.id ?? "",
     goalAmount: goal?.price ?? 0.0,
     weeklySpend: double.tryParse(profile?.weeklySpending ?? "0") ?? 0.0,
+    haveGoal: goal != null,
   );
 
   return engine.execute(financeData);

@@ -3,26 +3,32 @@ import 'package:finance_tracking/core/app_strings/home_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
 import 'package:finance_tracking/core/widgets/info_card.dart';
 import 'package:finance_tracking/features/daily_advice/presentation/providers/daily_advice_provider.dart';
+import 'package:finance_tracking/features/get_goal/presentation/view/intents/get_goal_intent.dart';
 import 'package:finance_tracking/features/get_goal/presentation/view/providers/get_goal_provider.dart';
 import 'package:finance_tracking/features/get_goal/presentation/view/states/get_goal_states.dart';
+import 'package:finance_tracking/features/get_profile/presentation/view/intents/get_profile_intent.dart';
 import 'package:finance_tracking/features/get_profile/presentation/view/providers/get_profile_provider.dart';
 import 'package:finance_tracking/features/home/presentation/widgets/custom_header.dart';
 import 'package:finance_tracking/features/home/presentation/widgets/goal_tracker_widget.dart';
 import 'package:finance_tracking/features/home/presentation/widgets/home_transaction_body.dart';
 import 'package:finance_tracking/features/home/presentation/widgets/home_transaction_header.dart';
+import 'package:finance_tracking/features/home/presentation/widgets/no_goal_overview_widget.dart';
 import 'package:finance_tracking/core/widgets/custom_toast.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/intents/transaction_intents.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/providers/transaction_providers.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/states/add_transaction_state.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/states/get_transaction_states.dart';
+import 'package:finance_tracking/features/transaction/presentation/widgets/add_transaction_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+  final bool shortcut;
+  const HomeScreen({super.key, this.shortcut = false});
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
@@ -32,13 +38,35 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      ref.read(getProfileProvider.notifier).getProfile();
-      ref.read(getGoalProvider.notifier).getGoal();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleShortcut();
+      ref.read(getProfileProvider.notifier).handleIntent(GetProfileIntentImpl());
+      ref.read(getGoalProvider.notifier).handleIntent(GetGoalIntentImpl());
       ref
           .read(getTransactionProvider.notifier)
           .handleIntent(GetTransactionsIntent(limit: 5));
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.shortcut && !oldWidget.shortcut) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _handleShortcut();
+      });
+    }
+  }
+
+  void _handleShortcut() {
+    if (widget.shortcut) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => const AddTransactionBottomSheet(),
+      );
+    }
   }
 
   @override
@@ -144,16 +172,43 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           duration: Duration(milliseconds: 600),
                         ),
                     Gap(24.h),
-                    GoalTrackerWidget()
-                        .animate()
-                        .fadeIn(
-                          delay: Duration(milliseconds: 200),
-                          duration: Duration(milliseconds: 600),
-                        )
-                        .slideY(
-                          begin: 0.1,
-                          duration: Duration(milliseconds: 600),
-                        ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final goalState = ref.watch(getGoalProvider);
+                        if (goalState is GetGoalLoading) {
+                          return Center(
+                            child: LoadingAnimationWidget.inkDrop(
+                              color: AppColors.primaryColor,
+                              size: 20,
+                            ),
+                          );
+                        } else if (goalState is GetGoalSuccess) {
+                          return GoalTrackerWidget()
+                              .animate()
+                              .fadeIn(
+                                delay: Duration(milliseconds: 200),
+                                duration: Duration(milliseconds: 600),
+                          )
+                          .slideY(
+                            begin: 0.1,
+                            duration: Duration(milliseconds: 600),
+                          );
+                        } else if (goalState is GetGoalNull) {
+                          return const NoGoalOverviewWidget()
+                              .animate()
+                              .fadeIn(
+                                delay: const Duration(milliseconds: 200),
+                                duration: const Duration(milliseconds: 600),
+                              )
+                              .slideY(
+                                begin: 0.1,
+                                duration: const Duration(milliseconds: 600),
+                              );
+                        } else {
+                          return SizedBox.shrink();
+                        }
+                      },
+                    ),
                     Gap(24.h),
                     Consumer(
                       builder: (context, ref, child) {

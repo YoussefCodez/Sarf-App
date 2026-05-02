@@ -30,7 +30,7 @@ class GoalRepositoryImpl implements GoalRepositoryContract {
       if (isOnline) {
         final goal = await remoteGoalDataSource.getGoal();
         if (goal == null) {
-          return const Left("You haven't set a main goal yet.");
+          return const Left("No Goal");
         }
         final localGoal = HomeLocalGoalModel.fromEntity(goal);
         await localGoalDataSource.saveGoal(localGoal);
@@ -40,7 +40,7 @@ class GoalRepositoryImpl implements GoalRepositoryContract {
         if (cachedGoal != null) {
           return Right(cachedGoal.toEntity());
         }
-        return const Left("Offline and no cached goal found");
+        return const Left("No Goal");
       }
     } catch (e) {
       printOutPut(e);

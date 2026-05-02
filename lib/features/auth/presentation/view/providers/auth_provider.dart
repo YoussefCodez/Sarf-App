@@ -4,6 +4,7 @@ import 'package:finance_tracking/features/auth/domain/use_cases/signup_usecase.d
 import 'package:finance_tracking/features/auth/domain/use_cases/logout_usecase.dart';
 import 'package:finance_tracking/features/auth/presentation/view/notifiers/auth_notifier.dart';
 import 'package:finance_tracking/features/auth/presentation/view/states/auth_states.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthStates>(
@@ -13,3 +14,8 @@ final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthStates>(
     logoutUseCase: getIt<LogoutUsecase>(),
   ),
 );
+
+final currentUserIdProvider = Provider<String>((ref) {
+  ref.watch(authNotifierProvider);
+  return ref.read(authNotifierProvider.notifier).currentUserId;
+});

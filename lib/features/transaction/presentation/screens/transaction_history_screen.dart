@@ -176,6 +176,8 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
         iconColor: AppColors.whiteColor,
         iconSize: 24,
       ),
+      isNoted: transaction.note != null,
+      note: transaction.note ?? "",
       trailing: Text(
         "${formatPrice(transaction.price)} EGP",
         style: TextStyle(

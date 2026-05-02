@@ -1,9 +1,7 @@
 import 'package:finance_tracking/core/app_strings/home_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
-import 'package:finance_tracking/features/get_goal/presentation/view/providers/get_goal_provider.dart';
-import 'package:finance_tracking/features/get_goal/presentation/view/states/get_goal_states.dart';
-import 'package:finance_tracking/features/get_profile/presentation/view/providers/get_profile_provider.dart';
-import 'package:finance_tracking/features/get_profile/presentation/view/states/get_profile_states.dart';
+import 'package:finance_tracking/features/home/presentation/view/providers/goal_tracker_provider.dart';
+import 'package:finance_tracking/features/home/presentation/view/states/goal_tracker_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,22 +22,26 @@ class GoalTrackerWidget extends StatelessWidget {
       ),
       child: Consumer(
         builder: (context, ref, child) {
-          final state = ref.watch(getGoalProvider);
-          final profileState = ref.watch(getProfileProvider);
-          final profile = profileState is GetProfileSuccess
-              ? profileState.userProfileEntity
-              : null;
-          final currentMoneyStr = profile?.currentMoney ?? "0";
-          final currentMoney = double.tryParse(currentMoneyStr) ?? 0.0;
-          final percentage =
-              state is GetGoalSuccess && state.goalEntity.price > 0
-              ? (currentMoney / state.goalEntity.price) * 100
-              : 0.0;
+          final state = ref.watch(goalTrackerProvider);
+
+          if (state is GoalTrackerError) {
+            return Center(
+              child: Text(
+                state.message,
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
+          }
+
+          final data = state is GoalTrackerSuccess
+              ? state
+              : GoalTrackerSuccess.skeleton();
+          final isLoading = state is GoalTrackerLoading || state is GoalTrackerInitial;
+
           return Skeletonizer(
-            enabled:
-                state is GetGoalLoading || profileState is GetProfileLoading,
+            enabled: isLoading,
             child: Column(
-              crossAxisAlignment: .start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
@@ -47,14 +49,16 @@ class GoalTrackerWidget extends StatelessWidget {
                       HomeStrings.yourMainGoal,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Container(
                       padding: REdgeInsets.symmetric(
                         horizontal: 12.w,
                         vertical: 4.h,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.greenIconBackgroundColor.withValues(
+                        color: data.growthPercent > 0 ? AppColors.greenIconBackgroundColor.withValues(
+                          alpha: 0.4,
+                        ) : AppColors.tertiaryColor.withValues(
                           alpha: 0.4,
                         ),
                         borderRadius: BorderRadius.circular(12.r),
@@ -62,18 +66,17 @@ class GoalTrackerWidget extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            "42%",
-                            style: Theme.of(context).textTheme.labelSmall
-                                ?.copyWith(
-                                  color: AppColors.greenIconBackgroundColor,
+                            "${data.growthPercent.toInt()}%",
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                  color: data.growthPercent > 0 ? AppColors.greenIconBackgroundColor : AppColors.tertiaryColor,
                                   fontSize: 14.sp,
-                                  fontWeight: .bold,
+                                  fontWeight: FontWeight.bold,
                                 ),
                           ),
                           Gap(4.w),
                           Icon(
-                            Icons.trending_up,
-                            color: AppColors.greenIconBackgroundColor,
+                            data.growthPercent > 0 ? Icons.trending_up : Icons.trending_down,
+                            color: data.growthPercent > 0 ? AppColors.greenIconBackgroundColor : AppColors.tertiaryColor,
                             size: 16.r,
                           ),
                         ],
@@ -82,16 +85,16 @@ class GoalTrackerWidget extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  state is GetGoalSuccess ? state.goalEntity.name : "GoalName",
+                  data.goalName,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: .w900,
-                    fontSize: 32.sp,
-                  ),
+                        fontWeight: FontWeight.w900,
+                        fontSize: 32.sp,
+                      ),
                 ),
                 Gap(24.h),
                 TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 0, end: currentMoney),
-                  duration: Duration(seconds: 2),
+                  tween: Tween<double>(begin: 0, end: data.currentMoney),
+                  duration: const Duration(seconds: 2),
                   builder: (context, value, child) {
                     return Text.rich(
                       TextSpan(
@@ -101,9 +104,7 @@ class GoalTrackerWidget extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           TextSpan(
-                            text: state is GetGoalSuccess
-                                ? "/${NumberFormat('#,###').format(state.goalEntity.price)}"
-                                : "/2,000",
+                            text: "/${NumberFormat('#,###').format(data.goalPrice)}",
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
@@ -111,10 +112,9 @@ class GoalTrackerWidget extends StatelessWidget {
                     );
                   },
                 ),
-
                 Gap(12.h),
                 LinearProgressIndicator(
-                  value: percentage / 100,
+                  value: data.percentage / 100,
                   color: AppColors.primaryColor,
                   backgroundColor: AppColors.onScreenColor,
                   borderRadius: BorderRadius.circular(12.r),
@@ -123,10 +123,11 @@ class GoalTrackerWidget extends StatelessWidget {
                 Gap(24.h),
                 Text(
                   HomeStrings.beforeYouSpend,
-                  textAlign: .center,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(fontSize: 14.sp),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontSize: 14.sp),
                 ),
               ],
             ),
@@ -136,3 +137,4 @@ class GoalTrackerWidget extends StatelessWidget {
     );
   }
 }
+

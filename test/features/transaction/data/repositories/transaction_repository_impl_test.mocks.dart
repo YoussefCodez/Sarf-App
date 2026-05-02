@@ -4,12 +4,16 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i6;
-import 'dart:typed_data' as _i14;
+import 'dart:typed_data' as _i16;
 
 import 'package:finance_tracking/config/services/network_info_service.dart'
-    as _i11;
+    as _i13;
 import 'package:finance_tracking/config/services/supabase_error_handler_service.dart'
+    as _i12;
+import 'package:finance_tracking/features/auth/data/data_source/auth_local_data_source.dart'
     as _i10;
+import 'package:finance_tracking/features/auth/data/models/local_user_profile_model.dart'
+    as _i11;
 import 'package:finance_tracking/features/transaction/data/data_source/transaction_local_data_source.dart'
     as _i8;
 import 'package:finance_tracking/features/transaction/data/data_source/transaction_remote_data_source.dart'
@@ -21,8 +25,8 @@ import 'package:finance_tracking/features/transaction/data/models/transaction_mo
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i5;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i2;
-import 'package:uuid/data.dart' as _i13;
-import 'package:uuid/uuid.dart' as _i12;
+import 'package:uuid/data.dart' as _i15;
+import 'package:uuid/uuid.dart' as _i14;
 import 'package:uuid/uuid_value.dart' as _i3;
 
 // ignore_for_file: type=lint
@@ -92,6 +96,23 @@ class MockTransactionRemoteDataSource extends _i1.Mock
           as _i6.Future<void>);
 
   @override
+  _i6.Future<void> updateRemoteProfileBalance({
+    required String? userId,
+    required double? amount,
+    required String? type,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateRemoteProfileBalance, [], {
+              #userId: userId,
+              #amount: amount,
+              #type: type,
+            }),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
   _i6.Future<List<_i7.TransactionModel>> getTransactions({int? limit}) =>
       (super.noSuchMethod(
             Invocation.method(#getTransactions, [], {#limit: limit}),
@@ -142,11 +163,47 @@ class MockTransactionLocalDataSource extends _i1.Mock
           as _i6.Future<void>);
 }
 
+/// A class which mocks [AuthLocalDataSource].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAuthLocalDataSource extends _i1.Mock
+    implements _i10.AuthLocalDataSource {
+  MockAuthLocalDataSource() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<void> saveUserProfile(_i11.LocalUserProfileModel? userProfile) =>
+      (super.noSuchMethod(
+            Invocation.method(#saveUserProfile, [userProfile]),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  _i6.Future<_i11.LocalUserProfileModel?> getUserProfile() =>
+      (super.noSuchMethod(
+            Invocation.method(#getUserProfile, []),
+            returnValue: _i6.Future<_i11.LocalUserProfileModel?>.value(),
+          )
+          as _i6.Future<_i11.LocalUserProfileModel?>);
+
+  @override
+  _i6.Future<void> clearUserProfile() =>
+      (super.noSuchMethod(
+            Invocation.method(#clearUserProfile, []),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+}
+
 /// A class which mocks [SupabaseErrorHandlerService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSupabaseErrorHandlerService extends _i1.Mock
-    implements _i10.SupabaseErrorHandlerService {
+    implements _i12.SupabaseErrorHandlerService {
   MockSupabaseErrorHandlerService() {
     _i1.throwOnMissingStub(this);
   }
@@ -166,7 +223,7 @@ class MockSupabaseErrorHandlerService extends _i1.Mock
 /// A class which mocks [NetworkInfo].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockNetworkInfo extends _i1.Mock implements _i11.NetworkInfo {
+class MockNetworkInfo extends _i1.Mock implements _i13.NetworkInfo {
   MockNetworkInfo() {
     _i1.throwOnMissingStub(this);
   }
@@ -183,13 +240,13 @@ class MockNetworkInfo extends _i1.Mock implements _i11.NetworkInfo {
 /// A class which mocks [Uuid].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUuid extends _i1.Mock implements _i12.Uuid {
+class MockUuid extends _i1.Mock implements _i14.Uuid {
   MockUuid() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  String v1({Map<String, dynamic>? options, _i13.V1Options? config}) =>
+  String v1({Map<String, dynamic>? options, _i15.V1Options? config}) =>
       (super.noSuchMethod(
             Invocation.method(#v1, [], {#options: options, #config: config}),
             returnValue: _i5.dummyValue<String>(
@@ -203,7 +260,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
   List<int> v1buffer(
     List<int>? buffer, {
     Map<String, dynamic>? options,
-    _i13.V1Options? config,
+    _i15.V1Options? config,
     int? offset = 0,
   }) =>
       (super.noSuchMethod(
@@ -219,7 +276,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
   @override
   _i3.UuidValue v1obj({
     Map<String, dynamic>? options,
-    _i13.V1Options? config,
+    _i15.V1Options? config,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#v1obj, [], {#options: options, #config: config}),
@@ -234,7 +291,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
           as _i3.UuidValue);
 
   @override
-  String v4({Map<String, dynamic>? options, _i13.V4Options? config}) =>
+  String v4({Map<String, dynamic>? options, _i15.V4Options? config}) =>
       (super.noSuchMethod(
             Invocation.method(#v4, [], {#options: options, #config: config}),
             returnValue: _i5.dummyValue<String>(
@@ -248,7 +305,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
   List<int> v4buffer(
     List<int>? buffer, {
     Map<String, dynamic>? options,
-    _i13.V4Options? config,
+    _i15.V4Options? config,
     int? offset = 0,
   }) =>
       (super.noSuchMethod(
@@ -264,7 +321,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
   @override
   _i3.UuidValue v4obj({
     Map<String, dynamic>? options,
-    _i13.V4Options? config,
+    _i15.V4Options? config,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#v4obj, [], {#options: options, #config: config}),
@@ -283,7 +340,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
     String? namespace,
     String? name, {
     Map<String, dynamic>? options,
-    _i13.V5Options? config,
+    _i15.V5Options? config,
   }) =>
       (super.noSuchMethod(
             Invocation.method(
@@ -305,8 +362,8 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
   @override
   String v5FromBytes(
     String? namespace,
-    _i14.Uint8List? name, {
-    _i13.V5Options? config,
+    _i16.Uint8List? name, {
+    _i15.V5Options? config,
   }) =>
       (super.noSuchMethod(
             Invocation.method(
@@ -331,7 +388,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
     String? name,
     List<int>? buffer, {
     Map<String, dynamic>? options,
-    _i13.V5Options? config,
+    _i15.V5Options? config,
     int? offset = 0,
   }) =>
       (super.noSuchMethod(
@@ -347,9 +404,9 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
   @override
   List<int> v5FromBytesBuffer(
     String? namespace,
-    _i14.Uint8List? name,
+    _i16.Uint8List? name,
     List<int>? buffer, {
-    _i13.V5Options? config,
+    _i15.V5Options? config,
     int? offset = 0,
   }) =>
       (super.noSuchMethod(
@@ -367,7 +424,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
     String? namespace,
     String? name, {
     Map<String, dynamic>? options,
-    _i13.V5Options? config,
+    _i15.V5Options? config,
   }) =>
       (super.noSuchMethod(
             Invocation.method(
@@ -389,8 +446,8 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
   @override
   _i3.UuidValue v5FromBytesObj(
     String? namespace,
-    _i14.Uint8List? name, {
-    _i13.V5Options? config,
+    _i16.Uint8List? name, {
+    _i15.V5Options? config,
   }) =>
       (super.noSuchMethod(
             Invocation.method(
@@ -410,7 +467,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
           as _i3.UuidValue);
 
   @override
-  String v6({_i13.V6Options? config}) =>
+  String v6({_i15.V6Options? config}) =>
       (super.noSuchMethod(
             Invocation.method(#v6, [], {#config: config}),
             returnValue: _i5.dummyValue<String>(
@@ -423,7 +480,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
   @override
   List<int> v6buffer(
     List<int>? buffer, {
-    _i13.V6Options? config,
+    _i15.V6Options? config,
     int? offset = 0,
   }) =>
       (super.noSuchMethod(
@@ -437,7 +494,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
           as List<int>);
 
   @override
-  _i3.UuidValue v6obj({_i13.V6Options? config}) =>
+  _i3.UuidValue v6obj({_i15.V6Options? config}) =>
       (super.noSuchMethod(
             Invocation.method(#v6obj, [], {#config: config}),
             returnValue: _FakeUuidValue_1(
@@ -448,7 +505,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
           as _i3.UuidValue);
 
   @override
-  String v7({_i13.V7Options? config}) =>
+  String v7({_i15.V7Options? config}) =>
       (super.noSuchMethod(
             Invocation.method(#v7, [], {#config: config}),
             returnValue: _i5.dummyValue<String>(
@@ -461,7 +518,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
   @override
   List<int> v7buffer(
     List<int>? buffer, {
-    _i13.V7Options? config,
+    _i15.V7Options? config,
     int? offset = 0,
   }) =>
       (super.noSuchMethod(
@@ -475,7 +532,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
           as List<int>);
 
   @override
-  _i3.UuidValue v7obj({_i13.V7Options? config}) =>
+  _i3.UuidValue v7obj({_i15.V7Options? config}) =>
       (super.noSuchMethod(
             Invocation.method(#v7obj, [], {#config: config}),
             returnValue: _FakeUuidValue_1(
@@ -486,7 +543,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
           as _i3.UuidValue);
 
   @override
-  String v8({_i13.V8Options? config}) =>
+  String v8({_i15.V8Options? config}) =>
       (super.noSuchMethod(
             Invocation.method(#v8, [], {#config: config}),
             returnValue: _i5.dummyValue<String>(
@@ -499,7 +556,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
   @override
   List<int> v8buffer(
     List<int>? buffer, {
-    _i13.V8Options? config,
+    _i15.V8Options? config,
     int? offset = 0,
   }) =>
       (super.noSuchMethod(
@@ -513,7 +570,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
           as List<int>);
 
   @override
-  _i3.UuidValue v8obj({_i13.V8Options? config}) =>
+  _i3.UuidValue v8obj({_i15.V8Options? config}) =>
       (super.noSuchMethod(
             Invocation.method(#v8obj, [], {#config: config}),
             returnValue: _FakeUuidValue_1(
@@ -524,7 +581,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
           as _i3.UuidValue);
 
   @override
-  String v8g({_i13.V8GenericOptions? config}) =>
+  String v8g({_i15.V8GenericOptions? config}) =>
       (super.noSuchMethod(
             Invocation.method(#v8g, [], {#config: config}),
             returnValue: _i5.dummyValue<String>(
@@ -537,7 +594,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
   @override
   List<int> v8gbuffer(
     List<int>? buffer, {
-    _i13.V8GenericOptions? config,
+    _i15.V8GenericOptions? config,
     int? offset = 0,
   }) =>
       (super.noSuchMethod(
@@ -551,7 +608,7 @@ class MockUuid extends _i1.Mock implements _i12.Uuid {
           as List<int>);
 
   @override
-  _i3.UuidValue v8gobj({_i13.V8GenericOptions? config}) =>
+  _i3.UuidValue v8gobj({_i15.V8GenericOptions? config}) =>
       (super.noSuchMethod(
             Invocation.method(#v8gobj, [], {#config: config}),
             returnValue: _FakeUuidValue_1(
