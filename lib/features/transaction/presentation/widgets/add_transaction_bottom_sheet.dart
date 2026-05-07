@@ -3,7 +3,7 @@ import 'package:finance_tracking/core/theme/app_colors.dart';
 import 'package:finance_tracking/core/app_strings/transaction_strings.dart';
 import 'package:finance_tracking/core/widgets/custom_toast.dart';
 import 'package:finance_tracking/features/on_boarding/presentation/widgets/spend_chip_widget.dart';
-import 'package:finance_tracking/features/transaction/data/models/transaction_model.dart';
+import 'package:finance_tracking/config/entities/transaction_entity.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/intents/transaction_intents.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/providers/transaction_providers.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/states/add_transaction_state.dart';

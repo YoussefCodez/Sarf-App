@@ -39,7 +39,7 @@ void main() {
   });
 
   final tDate = DateTime(2024, 1, 1);
-  
+
   final tRemoteGoalModel = RemoteGoalModel(
     id: "id",
     userId: "user_123",
@@ -49,48 +49,58 @@ void main() {
     price: 50000.0,
   );
 
-  test("should return goal and save it locally when remote call is successful", () async {
-    bool isConnected = true;
-    final tLocalGoalModel = HomeLocalGoalModel.fromEntity(tRemoteGoalModel);
+  test(
+    "should return goal and save it locally when remote call is successful",
+    () async {
+      bool isConnected = true;
+      final tLocalGoalModel = HomeLocalGoalModel.fromEntity(tRemoteGoalModel);
 
-    // Arrange
-    when(networkInfo.isConnected).thenAnswer((_) async => isConnected);
-    when(remoteGoalDataSource.getGoal())
-        .thenAnswer((_) async => tRemoteGoalModel);
-    when(localGoalDataSource.saveGoal(any))
-        .thenAnswer((_) async => {});
+      // Arrange
+      when(networkInfo.isConnected).thenAnswer((_) async => isConnected);
+      when(
+        remoteGoalDataSource.getGoal(),
+      ).thenAnswer((_) async => tRemoteGoalModel);
+      when(localGoalDataSource.saveGoal(any)).thenAnswer((_) async => {});
 
-    // Act
-    final result = await goalRepositoryImpl.getGoal();
+      // Act
+      final result = await goalRepositoryImpl.getGoal();
 
-    // Assert
-    expect(result, Right(tRemoteGoalModel));
-    verify(remoteGoalDataSource.getGoal()).called(1);
-    verify(localGoalDataSource.saveGoal(tLocalGoalModel)).called(1);
-  });
+      // Assert
+      expect(result, Right(tRemoteGoalModel));
+      verify(remoteGoalDataSource.getGoal()).called(1);
+      verify(localGoalDataSource.saveGoal(tLocalGoalModel)).called(1);
+    },
+  );
 
-  test("should return error when remote data source throws and NO cached data exists", () async {
-    // Arrange
-    final tException = Exception("Database error");
-    bool isConnected = true;
-    when(networkInfo.isConnected).thenAnswer((_) async => isConnected);
-    when(remoteGoalDataSource.getGoal()).thenThrow(tException);
-    when(localGoalDataSource.getGoal()).thenAnswer((_) async => null);
-    when(supabaseErrorHandlerService.handle(tException)).thenReturn("Server Error");
+  test(
+    "should return error when remote data source throws and NO cached data exists",
+    () async {
+      // Arrange
+      final tException = Exception("Database error");
+      bool isConnected = true;
+      when(networkInfo.isConnected).thenAnswer((_) async => isConnected);
+      when(remoteGoalDataSource.getGoal()).thenThrow(tException);
+      when(localGoalDataSource.getGoal()).thenAnswer((_) async => null);
+      when(
+        supabaseErrorHandlerService.handleError(tException),
+      ).thenReturn("Server Error");
 
-    // Act
-    final result = await goalRepositoryImpl.getGoal();
+      // Act
+      final result = await goalRepositoryImpl.getGoal();
 
-    // Assert
-    expect(result, const Left("Server Error"));
-    verify(remoteGoalDataSource.getGoal()).called(1);
-  });
+      // Assert
+      expect(result, const Left("Server Error"));
+      verify(remoteGoalDataSource.getGoal()).called(1);
+    },
+  );
 
   test("should return cached goal when remote call fails", () async {
     // Arrange
     final tLocalGoalModel = HomeLocalGoalModel.fromEntity(tRemoteGoalModel);
     when(remoteGoalDataSource.getGoal()).thenThrow(Exception());
-    when(localGoalDataSource.getGoal()).thenAnswer((_) async => tLocalGoalModel);
+    when(
+      localGoalDataSource.getGoal(),
+    ).thenAnswer((_) async => tLocalGoalModel);
 
     // Act
     final result = await goalRepositoryImpl.getGoal();

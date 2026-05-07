@@ -15,5 +15,6 @@ class HiveService {
     await Hive.openBox<PaymentCardModel>('payment_cards_box');
     await Hive.openBox('user_profile_box');
     await Hive.openBox('transaction_box');
+    await Hive.openBox('notifications_box');
   }
 }

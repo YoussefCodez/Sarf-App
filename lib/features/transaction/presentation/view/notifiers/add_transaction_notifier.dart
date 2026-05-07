@@ -1,5 +1,5 @@
 import 'package:finance_tracking/features/get_profile/presentation/view/providers/get_profile_provider.dart';
-import 'package:finance_tracking/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:finance_tracking/config/entities/transaction_entity.dart';
 import 'package:finance_tracking/features/transaction/domain/use_cases/add_transaction_usecase.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/intents/transaction_intents.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/providers/transaction_providers.dart';

@@ -4,9 +4,9 @@ import 'package:finance_tracking/config/services/supabase_error_handler_service.
 import 'package:finance_tracking/features/auth/data/models/local_user_profile_model.dart';
 import 'package:finance_tracking/features/transaction/data/data_source/transaction_local_data_source.dart';
 import 'package:finance_tracking/features/transaction/data/data_source/transaction_remote_data_source.dart';
-import 'package:finance_tracking/features/transaction/data/models/local_transaction_model.dart';
+import 'package:finance_tracking/config/models/local_transaction_model.dart';
 import 'package:finance_tracking/features/transaction/data/repositories/transaction_repository_impl.dart';
-import 'package:finance_tracking/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:finance_tracking/config/entities/transaction_entity.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -108,7 +108,7 @@ void main() {
         ),
       ).thenThrow(Exception('Failed to insert transaction'));
       when(
-        mockSupabaseErrorHandlerService.handle(any),
+        mockSupabaseErrorHandlerService.handleError(any),
       ).thenReturn('Failed to insert transaction');
       when(
         mockTransactionLocalDataSource.saveTransactions(any),
@@ -256,7 +256,7 @@ void main() {
       ).thenAnswer((_) async => []);
 
       when(
-        mockSupabaseErrorHandlerService.handle(any),
+        mockSupabaseErrorHandlerService.handleError(any),
       ).thenReturn('Failed to get transactions');
       when(mockRemoteTransactionDataSource.getUserId()).thenReturn('1');
       // Act
@@ -405,7 +405,7 @@ void main() {
       ).thenAnswer((_) async => Future.value());
 
       when(
-        mockSupabaseErrorHandlerService.handle(any),
+        mockSupabaseErrorHandlerService.handleError(any),
       ).thenReturn('sync failed');
 
       // Act

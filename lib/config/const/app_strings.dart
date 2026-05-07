@@ -1,6 +1,6 @@
 abstract class AppStrings {
   static const String netWorkError =
-      "No Internet Connection, please check your network.";
+      "No Internet Connection, please check your network. (Try Close Wifi or Data)";
   static const String emailAlreadyInUse = "This email is already registered.";
   static const String weakPassword = "The password is too weak.";
   static const String invalidEmail = "The email address is not valid.";

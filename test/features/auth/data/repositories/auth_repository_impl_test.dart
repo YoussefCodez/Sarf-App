@@ -213,7 +213,7 @@ void main() {
       ).thenThrow(Exception("Failed to insert data"));
 
       when(
-        mockSupabaseErrorHandlerService.handle(any),
+        mockSupabaseErrorHandlerService.handleError(any),
       ).thenReturn("Failed to insert data");
 
       // 2. Act
@@ -290,7 +290,7 @@ void main() {
       ).thenThrow(tException);
 
       when(
-        mockSupabaseErrorHandlerService.handle(any),
+        mockSupabaseErrorHandlerService.handleError(any),
       ).thenReturn(tErrorMessage);
 
       // 2. Act
@@ -310,9 +310,7 @@ void main() {
         mockRemoteDataSource.signIn(email: tEmail, password: tPassword),
       ).called(1);
 
-      verify(
-        mockSupabaseErrorHandlerService.handle(any),
-      ).called(1);
+      verify(mockSupabaseErrorHandlerService.handleError(any)).called(1);
     });
   });
 }

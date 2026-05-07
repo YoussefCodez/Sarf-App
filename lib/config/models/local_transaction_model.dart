@@ -1,6 +1,6 @@
-import 'package:finance_tracking/features/transaction/data/models/transaction_model.dart';
-import 'package:finance_tracking/features/transaction/domain/entities/local_transaction_entity.dart';
-import 'package:finance_tracking/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:finance_tracking/config/models/transaction_model.dart';
+import 'package:finance_tracking/config/entities/local_transaction_entity.dart';
+import 'package:finance_tracking/config/entities/transaction_entity.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 part 'local_transaction_model.g.dart';

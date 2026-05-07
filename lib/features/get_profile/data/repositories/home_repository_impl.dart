@@ -27,7 +27,9 @@ class HomeRepositoryImpl implements HomeRepositoryContract {
       final isOnline = await networkInfo.isConnected;
       if (isOnline) {
         final profile = await remoteHomeDataSource.getProfile();
-        final localProfile = LocalUserProfileModel.fromEntity(profile.toEntity());
+        final localProfile = LocalUserProfileModel.fromEntity(
+          profile.toEntity(),
+        );
         await authLocalDataSource.saveUserProfile(localProfile);
         return Right(profile.toEntity());
       } else {
@@ -43,7 +45,7 @@ class HomeRepositoryImpl implements HomeRepositoryContract {
       if (cachedProfile != null) {
         return Right(cachedProfile.toEntity());
       }
-      return Left(supabaseErrorHandlerService.handle(e));
+      return Left(supabaseErrorHandlerService.handleError(e));
     }
   }
 }

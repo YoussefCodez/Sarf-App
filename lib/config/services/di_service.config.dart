@@ -17,6 +17,22 @@ import 'package:local_auth/local_auth.dart' as _i152;
 import 'package:quick_actions/quick_actions.dart' as _i578;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i454;
 
+import '../../features/analytics/data/datasources/remote_analytics_data_source.dart'
+    as _i76;
+import '../../features/analytics/data/repositories/analytics_repository_impl.dart'
+    as _i425;
+import '../../features/analytics/domain/repositories/analytics_repository_contract.dart'
+    as _i703;
+import '../../features/analytics/domain/usecases/calculate_daily_analytics_use_case.dart'
+    as _i863;
+import '../../features/analytics/domain/usecases/get_daily_transactions_use_case.dart'
+    as _i1002;
+import '../../features/analytics/domain/usecases/get_monthly_transactions_use_case.dart'
+    as _i103;
+import '../../features/analytics/domain/usecases/get_weekly_transactions_use_case.dart'
+    as _i147;
+import '../../features/analytics/presentation/view/notifiers/get_daily_analytics_notifier.dart'
+    as _i59;
 import '../../features/auth/data/data_source/auth_local_data_source.dart'
     as _i280;
 import '../../features/auth/data/data_source/auth_remote_data_source.dart'
@@ -49,6 +65,24 @@ import '../../features/get_profile/domain/repositories/home_repository_contract.
     as _i718;
 import '../../features/get_profile/domain/use_cases/get_profile_use_case.dart'
     as _i519;
+import '../../features/notifications/data/datasources/notification_history_local_data_source.dart'
+    as _i853;
+import '../../features/notifications/data/repositories/notification_history_repository_impl.dart'
+    as _i600;
+import '../../features/notifications/data/repositories/notification_repository_impl.dart'
+    as _i361;
+import '../../features/notifications/domain/repositories/notification_history_repository.dart'
+    as _i1029;
+import '../../features/notifications/domain/repositories/notification_repository.dart'
+    as _i367;
+import '../../features/notifications/domain/usecases/check_streak_and_notify_use_case.dart'
+    as _i962;
+import '../../features/notifications/domain/usecases/get_notifications_use_case.dart'
+    as _i373;
+import '../../features/notifications/domain/usecases/schedule_daily_evening_notification_use_case.dart'
+    as _i263;
+import '../../features/notifications/domain/usecases/schedule_daily_morning_notification_use_case.dart'
+    as _i530;
 import '../../features/on_boarding/data/datasources/goal_local_datasource.dart'
     as _i428;
 import '../../features/on_boarding/data/datasources/on_boarding_local_datasource.dart'
@@ -115,6 +149,7 @@ import '../modules/app_module.dart' as _i781;
 import '../modules/hive_module.dart' as _i732;
 import '../modules/supabase_module.dart' as _i742;
 import 'network_info_service.dart' as _i236;
+import 'notifications_service.dart' as _i730;
 import 'supabase_error_handler_service.dart' as _i38;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -137,6 +172,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i38.SupabaseErrorHandlerService>(
       () => _i38.SupabaseErrorHandlerService(),
     );
+    gh.lazySingleton<_i863.CalculateDailyAnalyticsUseCase>(
+      () => _i863.CalculateDailyAnalyticsUseCase(),
+    );
     gh.lazySingleton<_i400.BiometricsPlatformDataSource>(
       () => _i400.BiometricsPlatformDataSourceImpl(
         auth: gh<_i152.LocalAuthentication>(),
@@ -149,6 +187,11 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i669.BiometricsRepositoryImpl(
         localDataSource: gh<_i886.BiometricsLocalDataSource>(),
         platformDataSource: gh<_i400.BiometricsPlatformDataSource>(),
+      ),
+    );
+    gh.lazySingleton<_i76.RemoteAnalyticsDataSource>(
+      () => _i76.RemoteAnalyticsDataSourceImpl(
+        supabaseClient: gh<_i454.SupabaseClient>(),
       ),
     );
     gh.lazySingleton<_i182.AuthRemoteDataSource>(
@@ -176,6 +219,12 @@ extension GetItInjectableX on _i174.GetIt {
         supabaseClient: gh<_i454.SupabaseClient>(),
       ),
     );
+    gh.lazySingleton<_i703.AnalyticsRepositoryContract>(
+      () => _i425.AnalyticsRepositoryImpl(
+        remoteDataSource: gh<_i76.RemoteAnalyticsDataSource>(),
+        supabaseErrorHandlerService: gh<_i38.SupabaseErrorHandlerService>(),
+      ),
+    );
     gh.lazySingleton<_i578.AuthenticateUseCase>(
       () => _i578.AuthenticateUseCase(
         repository: gh<_i216.BiometricsRepositoryContract>(),
@@ -199,6 +248,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i903.OnBoardingLocalDataSource>(
       () => _i903.OnBoardingLocalDataSourceImpl(gh<_i965.HiveInterface>()),
     );
+    gh.lazySingleton<_i853.NotificationHistoryLocalDataSource>(
+      () => _i853.NotificationHistoryLocalDataSource(gh<_i965.HiveInterface>()),
+    );
     gh.lazySingleton<_i236.NetworkInfo>(
       () => _i236.NetworkInfoImpl(gh<_i895.Connectivity>()),
     );
@@ -213,6 +265,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i215.TransactionLocalDataSource>(
       () => _i215.TransactionLocalDataSourceImpl(gh<_i965.HiveInterface>()),
+    );
+    gh.lazySingleton<_i1029.NotificationHistoryRepository>(
+      () => _i600.NotificationHistoryRepositoryImpl(
+        localDataSource: gh<_i853.NotificationHistoryLocalDataSource>(),
+      ),
     );
     gh.factoryParam<
       _i392.GetDailyAdviceUseCase,
@@ -236,6 +293,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i394.AddGoalUseCase>(
       () => _i394.AddGoalUseCase(gh<_i155.GoalRepository>()),
     );
+    gh.lazySingleton<_i730.NotificationService>(
+      () => _i730.NotificationService(
+        gh<_i965.HiveInterface>(),
+        gh<_i853.NotificationHistoryLocalDataSource>(),
+      ),
+    );
     gh.lazySingleton<_i273.AuthRepositoryContract>(
       () => _i153.AuthRepositoryImpl(
         remoteDataSource: gh<_i182.AuthRemoteDataSource>(),
@@ -255,12 +318,32 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i644.OnBoardingRepositoryImpl(gh<_i903.OnBoardingLocalDataSource>()),
     );
+    gh.lazySingleton<_i1002.GetDailyTransactionsUseCase>(
+      () => _i1002.GetDailyTransactionsUseCase(
+        gh<_i703.AnalyticsRepositoryContract>(),
+      ),
+    );
+    gh.lazySingleton<_i103.GetMonthlyTransactionsUseCase>(
+      () => _i103.GetMonthlyTransactionsUseCase(
+        gh<_i703.AnalyticsRepositoryContract>(),
+      ),
+    );
+    gh.lazySingleton<_i147.GetWeeklyTransactionsUseCase>(
+      () => _i147.GetWeeklyTransactionsUseCase(
+        gh<_i703.AnalyticsRepositoryContract>(),
+      ),
+    );
     gh.lazySingleton<_i844.LogoutUsecase>(
       () => _i844.LogoutUsecase(repository: gh<_i273.AuthRepositoryContract>()),
     );
     gh.lazySingleton<_i861.GetGoalUseCase>(
       () => _i861.GetGoalUseCase(
         goalRepositoryContract: gh<_i456.GoalRepositoryContract>(),
+      ),
+    );
+    gh.lazySingleton<_i373.GetNotificationsUseCase>(
+      () => _i373.GetNotificationsUseCase(
+        repository: gh<_i1029.NotificationHistoryRepository>(),
       ),
     );
     gh.lazySingleton<_i746.StreakLocalDataSource>(
@@ -322,6 +405,9 @@ extension GetItInjectableX on _i174.GetIt {
         networkInfo: gh<_i236.NetworkInfo>(),
       ),
     );
+    gh.lazySingleton<_i367.NotificationRepository>(
+      () => _i361.NotificationRepositoryImpl(gh<_i730.NotificationService>()),
+    );
     gh.lazySingleton<_i842.GetStreakUseCase>(
       () => _i842.GetStreakUseCase(
         repository: gh<_i401.StreakRepositoryContract>(),
@@ -330,6 +416,30 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i234.RecordCheckInUseCase>(
       () => _i234.RecordCheckInUseCase(
         repository: gh<_i401.StreakRepositoryContract>(),
+      ),
+    );
+    gh.lazySingleton<_i59.GetDailyAnalyticsNotifier>(
+      () => _i59.GetDailyAnalyticsNotifier(
+        gh<_i1002.GetDailyTransactionsUseCase>(),
+        gh<_i147.GetWeeklyTransactionsUseCase>(),
+        gh<_i103.GetMonthlyTransactionsUseCase>(),
+        gh<_i863.CalculateDailyAnalyticsUseCase>(),
+      ),
+    );
+    gh.lazySingleton<_i263.ScheduleDailyEveningNotificationUseCase>(
+      () => _i263.ScheduleDailyEveningNotificationUseCase(
+        gh<_i367.NotificationRepository>(),
+      ),
+    );
+    gh.lazySingleton<_i530.ScheduleDailyMorningNotificationUseCase>(
+      () => _i530.ScheduleDailyMorningNotificationUseCase(
+        gh<_i367.NotificationRepository>(),
+      ),
+    );
+    gh.lazySingleton<_i962.CheckStreakAndNotifyUseCase>(
+      () => _i962.CheckStreakAndNotifyUseCase(
+        gh<_i367.NotificationRepository>(),
+        gh<_i401.StreakRepositoryContract>(),
       ),
     );
     return this;

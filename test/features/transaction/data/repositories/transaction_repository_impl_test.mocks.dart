@@ -6,6 +6,9 @@
 import 'dart:async' as _i6;
 import 'dart:typed_data' as _i16;
 
+import 'package:finance_tracking/config/models/local_transaction_model.dart'
+    as _i9;
+import 'package:finance_tracking/config/models/transaction_model.dart' as _i7;
 import 'package:finance_tracking/config/services/network_info_service.dart'
     as _i13;
 import 'package:finance_tracking/config/services/supabase_error_handler_service.dart'
@@ -18,10 +21,6 @@ import 'package:finance_tracking/features/transaction/data/data_source/transacti
     as _i8;
 import 'package:finance_tracking/features/transaction/data/data_source/transaction_remote_data_source.dart'
     as _i4;
-import 'package:finance_tracking/features/transaction/data/models/local_transaction_model.dart'
-    as _i9;
-import 'package:finance_tracking/features/transaction/data/models/transaction_model.dart'
-    as _i7;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i5;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i2;
@@ -209,12 +208,12 @@ class MockSupabaseErrorHandlerService extends _i1.Mock
   }
 
   @override
-  String handle(Object? e) =>
+  String handleError(Object? e) =>
       (super.noSuchMethod(
-            Invocation.method(#handle, [e]),
+            Invocation.method(#handleError, [e]),
             returnValue: _i5.dummyValue<String>(
               this,
-              Invocation.method(#handle, [e]),
+              Invocation.method(#handleError, [e]),
             ),
           )
           as String);

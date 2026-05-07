@@ -1,25 +1,25 @@
-import 'package:finance_tracking/features/transaction/data/models/local_transaction_model.dart';
-import 'package:finance_tracking/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:finance_tracking/config/models/local_transaction_model.dart';
+import 'package:finance_tracking/config/entities/transaction_entity.dart';
 
-enum Category {
-  food,
-  transport,
-  market,
-  medical,
-  rent,
-  other,
-}
+class TransactionModel {
+  final String id;
+  final String userId;
+  final String name;
+  final double price;
+  final String category;
+  final DateTime createdAt;
+  final String type;
+  final String? note;
 
-class TransactionModel extends TransactionEntity {
   const TransactionModel({
-    required super.id,
-    required super.name,
-    required super.price,
-    required super.category,
-    required super.createdAt,
-    required super.type,
-    required super.userId,
-    super.note,
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.category,
+    required this.createdAt,
+    required this.type,
+    required this.userId,
+    this.note,
   });
 
   factory TransactionModel.fromSupabase(Map<String, dynamic> json) {
@@ -28,7 +28,9 @@ class TransactionModel extends TransactionEntity {
       name: json['name']?.toString() ?? '',
       price: double.tryParse(json['price']?.toString() ?? '0') ?? 0.0,
       category: json['category']?.toString() ?? '',
-      createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) ?? DateTime.now() : DateTime.now(),
+      createdAt: json['created_at'] != null
+          ? DateTime.tryParse(json['created_at'].toString()) ?? DateTime.now()
+          : DateTime.now(),
       type: json['type']?.toString() ?? '',
       userId: json['user_id']?.toString() ?? '',
       note: json['note']?.toString(),

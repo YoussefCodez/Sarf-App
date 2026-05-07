@@ -54,7 +54,7 @@ class StreakRepositoryImpl implements StreakRepositoryContract {
       if (localStreak != null) {
         return Right(localStreak);
       }
-      return Left(supabaseErrorHandlerService.handle(e));
+      return Left(supabaseErrorHandlerService.handleError(e));
     }
   }
 
@@ -66,7 +66,11 @@ class StreakRepositoryImpl implements StreakRepositoryContract {
 
       if (isOnline) {
         final DateTime serverNow = await _getServerTime();
-        final DateTime todayUtc = DateTime.utc(serverNow.year, serverNow.month, serverNow.day);
+        final DateTime todayUtc = DateTime.utc(
+          serverNow.year,
+          serverNow.month,
+          serverNow.day,
+        );
 
         final existingStreak = await remoteDataSource.getStreak();
 
@@ -122,7 +126,11 @@ class StreakRepositoryImpl implements StreakRepositoryContract {
         final localStreak = await localDataSource.getStreak();
 
         final DateTime nowUtc = DateTime.now().toUtc();
-        final DateTime todayUtc = DateTime.utc(nowUtc.year, nowUtc.month, nowUtc.day);
+        final DateTime todayUtc = DateTime.utc(
+          nowUtc.year,
+          nowUtc.month,
+          nowUtc.day,
+        );
 
         if (localStreak == null || localStreak.currentStreak == 0) {
           await localDataSource.saveStreak(
@@ -180,7 +188,7 @@ class StreakRepositoryImpl implements StreakRepositoryContract {
       }
     } catch (e) {
       printOutPut(e);
-      return Left(supabaseErrorHandlerService.handle(e));
+      return Left(supabaseErrorHandlerService.handleError(e));
     }
   }
 

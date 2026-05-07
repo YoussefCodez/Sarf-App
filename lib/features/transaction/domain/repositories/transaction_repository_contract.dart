@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:finance_tracking/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:finance_tracking/config/entities/transaction_entity.dart';
 
 abstract class TransactionRepositoryContract {
   Future<Either<String, void>> addTransaction({

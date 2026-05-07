@@ -5,7 +5,7 @@ import '../const/app_strings.dart';
 
 @LazySingleton()
 class SupabaseErrorHandlerService {
-  String handle(Object e) {
+  String handleError(Object e) {
     if (e is AuthException) {
       switch (e.code) {
         case 'user_already_exists':

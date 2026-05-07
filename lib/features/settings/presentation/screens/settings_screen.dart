@@ -4,7 +4,6 @@ import 'package:finance_tracking/core/widgets/custom_toast.dart';
 import 'package:finance_tracking/core/widgets/custom_confirmation_dialog.dart';
 import 'package:finance_tracking/features/settings/presentation/widgets/profile_header.dart';
 import 'package:finance_tracking/features/settings/presentation/widgets/payment_cards_row.dart';
-import 'package:finance_tracking/features/settings/presentation/widgets/phone_number_row.dart';
 import 'package:finance_tracking/features/settings/presentation/widgets/settings_action_row.dart';
 import 'package:finance_tracking/features/auth/presentation/view/providers/auth_provider.dart';
 import 'package:finance_tracking/features/auth/presentation/view/states/auth_states.dart';
@@ -55,8 +54,6 @@ class SettingsScreen extends ConsumerWidget {
             const ProfileHeader(),
             Gap(24.h),
             const PaymentCardsRow(),
-            Gap(16.h),
-            const PhoneNumberRow(),
             Gap(24.h),
             Text(
               SettingsStrings.general,
@@ -67,26 +64,11 @@ class SettingsScreen extends ConsumerWidget {
             ),
             Gap(16.h),
             SettingsActionRow(
-              icon: Icons.language,
-              title: SettingsStrings.language,
-              onTap: () {},
-            ),
-            SettingsActionRow(
-              icon: Icons.notifications_active_outlined,
-              title: SettingsStrings.notifications,
-              onTap: () {},
-            ),
-            SettingsActionRow(
               icon: Icons.security,
               title: SettingsStrings.securityAndBiometrics,
               onTap: () {
                 context.push(AppRoutes.securityAndBiometricsScreen);
               },
-            ),
-            SettingsActionRow(
-              icon: Icons.privacy_tip_outlined,
-              title: SettingsStrings.privacyPolicy,
-              onTap: () {},
             ),
             Gap(16.h),
             Text(

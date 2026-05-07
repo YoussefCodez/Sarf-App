@@ -3,6 +3,9 @@ import 'package:finance_tracking/config/services/app_services.dart';
 import 'package:finance_tracking/config/services/di_service.dart';
 import 'package:finance_tracking/core/theme/app_theme.dart';
 import 'package:finance_tracking/go_router.dart';
+import 'package:finance_tracking/features/notifications/domain/usecases/check_streak_and_notify_use_case.dart';
+import 'package:finance_tracking/features/notifications/domain/usecases/schedule_daily_evening_notification_use_case.dart';
+import 'package:finance_tracking/features/notifications/domain/usecases/schedule_daily_morning_notification_use_case.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,6 +31,13 @@ class MyApp extends StatelessWidget {
   MyApp({super.key}) {
     showItems();
     navigate();
+    _initNotifications();
+  }
+
+  void _initNotifications() {
+    getIt<ScheduleDailyMorningNotificationUseCase>().call();
+    getIt<ScheduleDailyEveningNotificationUseCase>().call();
+    getIt<CheckStreakAndNotifyUseCase>().call();
   }
   final QuickActions quickActions = getIt<QuickActions>();
   void showItems() {

@@ -86,13 +86,13 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
         }
       } catch (dpError) {
         printOutPut(dpError);
-        return Left(supabaseErrorHandlerService.handle(dpError));
+        return Left(supabaseErrorHandlerService.handleError(dpError));
       }
 
       return Right(AuthUserModel.fromSupabase(response.user!.toJson()));
     } catch (e) {
       printOutPut(e);
-      return Left(supabaseErrorHandlerService.handle(e));
+      return Left(supabaseErrorHandlerService.handleError(e));
     }
   }
 
@@ -128,7 +128,7 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
       return Right(AuthUserModel.fromSupabase(response.user!.toJson()));
     } catch (e) {
       printOutPut(e);
-      return Left(supabaseErrorHandlerService.handle(e));
+      return Left(supabaseErrorHandlerService.handleError(e));
     }
   }
 

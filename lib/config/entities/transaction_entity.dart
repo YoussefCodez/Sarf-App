@@ -1,5 +1,14 @@
 import 'package:equatable/equatable.dart';
 
+enum Category {
+  food,
+  transport,
+  market,
+  medical,
+  rent,
+  other,
+}
+
 class TransactionEntity extends Equatable {
   final String id;
   final String userId;

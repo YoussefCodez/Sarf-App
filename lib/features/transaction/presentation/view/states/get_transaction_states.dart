@@ -1,4 +1,4 @@
-import 'package:finance_tracking/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:finance_tracking/config/entities/transaction_entity.dart';
 
 sealed class GetTransactionState {}
 

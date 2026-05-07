@@ -1,6 +1,6 @@
 import 'package:finance_tracking/core/app_strings/transaction_strings.dart';
 import 'package:finance_tracking/core/theme/app_colors.dart';
-import 'package:finance_tracking/features/transaction/data/models/transaction_model.dart';
+import 'package:finance_tracking/config/entities/transaction_entity.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/providers/transaction_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

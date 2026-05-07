@@ -1,4 +1,4 @@
-import 'package:finance_tracking/features/transaction/data/models/local_transaction_model.dart';
+import 'package:finance_tracking/config/models/local_transaction_model.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:injectable/injectable.dart';
 

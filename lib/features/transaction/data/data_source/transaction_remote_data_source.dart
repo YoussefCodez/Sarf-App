@@ -1,5 +1,5 @@
 import 'package:finance_tracking/config/const/app_tables.dart';
-import 'package:finance_tracking/features/transaction/data/models/transaction_model.dart';
+import 'package:finance_tracking/config/models/transaction_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 

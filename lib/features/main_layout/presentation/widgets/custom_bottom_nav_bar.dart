@@ -18,7 +18,7 @@ class CustomBottomNavBar extends StatelessWidget {
       Icons.home_rounded,
       Icons.analytics,
       Icons.add,
-      Icons.account_balance_wallet_rounded,
+      Icons.notifications_rounded,
       Icons.settings,
     ];
 

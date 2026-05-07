@@ -1,0 +1,9 @@
+flutter_native_splash:
+  color: "#061423"
+  image: assets/images/sarfLogo.png
+
+  android_12:
+    image: assets/images/sarfLogo.png
+    color: "#061423"
+
+  web: false

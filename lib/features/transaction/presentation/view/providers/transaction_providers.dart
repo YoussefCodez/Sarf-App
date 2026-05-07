@@ -1,5 +1,4 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:finance_tracking/features/transaction/data/models/transaction_model.dart';
 import 'package:finance_tracking/features/transaction/domain/use_cases/get_transaction_usecase.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/notifiers/get_transaction_notitifer.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/notifiers/transaction_type_notifier.dart';
@@ -7,6 +6,7 @@ import 'package:finance_tracking/features/transaction/presentation/view/states/g
 import 'package:finance_tracking/features/transaction/presentation/view/states/transaction_states.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:finance_tracking/config/entities/transaction_entity.dart';
 import 'package:finance_tracking/config/services/di_service.dart';
 import 'package:finance_tracking/features/transaction/domain/use_cases/add_transaction_usecase.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/notifiers/add_transaction_notifier.dart';

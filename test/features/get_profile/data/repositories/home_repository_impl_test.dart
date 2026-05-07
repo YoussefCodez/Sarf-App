@@ -91,8 +91,8 @@ void main() {
       bool isConnected = true;
       when(networkInfo.isConnected).thenAnswer((_) async => isConnected);
       when(mockRemoteHomeDataSource.getProfile()).thenThrow(Exception());
-      when(mockAuthLocalDataSource.getUserProfile()).thenAnswer((_) async =>
-        LocalUserProfileModel(
+      when(mockAuthLocalDataSource.getUserProfile()).thenAnswer(
+        (_) async => LocalUserProfileModel(
           id: '1',
           name: 'John Doe',
           email: 'youssef@gmail.com',
@@ -120,9 +120,11 @@ void main() {
       bool isConnected = true;
       when(networkInfo.isConnected).thenAnswer((_) async => isConnected);
       when(mockRemoteHomeDataSource.getProfile()).thenThrow(tException);
-      when(mockAuthLocalDataSource.getUserProfile()).thenAnswer((_) async => null);
       when(
-        mockSupabaseErrorHandlerService.handle(tException),
+        mockAuthLocalDataSource.getUserProfile(),
+      ).thenAnswer((_) async => null);
+      when(
+        mockSupabaseErrorHandlerService.handleError(tException),
       ).thenReturn("Error Message");
 
       // Act

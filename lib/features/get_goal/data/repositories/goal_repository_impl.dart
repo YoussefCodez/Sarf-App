@@ -48,7 +48,7 @@ class GoalRepositoryImpl implements GoalRepositoryContract {
       if (cachedGoal != null) {
         return Right(cachedGoal.toEntity());
       }
-      return Left(supabaseErrorHandlerService.handle(e));
+      return Left(supabaseErrorHandlerService.handleError(e));
     }
   }
 }

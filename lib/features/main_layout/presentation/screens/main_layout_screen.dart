@@ -8,6 +8,7 @@ import 'package:finance_tracking/features/transaction/presentation/view/provider
 import 'package:finance_tracking/features/transaction/presentation/widgets/add_transaction_bottom_sheet.dart';
 import 'package:finance_tracking/features/main_layout/presentation/widgets/custom_bottom_nav_bar.dart';
 import 'package:finance_tracking/features/main_layout/presentation/widgets/lock_screen_body.dart';
+import 'package:finance_tracking/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:finance_tracking/features/settings/presentation/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -99,12 +100,7 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen>
               HomeScreen(shortcut: widget.shortcut),
               const AnalyticsScreen(),
               const SizedBox.shrink(),
-              const Center(
-                child: Text(
-                  "Wallet",
-                  style: TextStyle(color: Colors.white, fontSize: 24),
-                ),
-              ),
+              const NotificationsScreen(),
               const SettingsScreen(),
             ],
           ),

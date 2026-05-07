@@ -4,13 +4,12 @@ import 'package:finance_tracking/config/services/supabase_error_handler_service.
 import 'package:finance_tracking/config/utils/out_put_print_util.dart';
 import 'package:finance_tracking/features/transaction/data/data_source/transaction_local_data_source.dart';
 import 'package:finance_tracking/features/transaction/data/data_source/transaction_remote_data_source.dart';
-import 'package:finance_tracking/features/transaction/data/models/local_transaction_model.dart';
-import 'package:finance_tracking/features/transaction/data/models/transaction_model.dart';
-import 'package:finance_tracking/features/transaction/domain/entities/transaction_entity.dart';
+import 'package:finance_tracking/config/models/local_transaction_model.dart';
+import 'package:finance_tracking/config/models/transaction_model.dart';
+import 'package:finance_tracking/config/entities/transaction_entity.dart';
 import 'package:finance_tracking/features/transaction/domain/repositories/transaction_repository_contract.dart';
 import 'package:injectable/injectable.dart';
 import 'package:uuid/uuid.dart';
-
 import 'package:finance_tracking/features/auth/data/data_source/auth_local_data_source.dart';
 
 @LazySingleton(as: TransactionRepositoryContract)
@@ -99,7 +98,7 @@ class TransactionRepositoryImpl implements TransactionRepositoryContract {
           syncStatus: SyncStatus.failed,
         ),
       ]);
-      return Left(supabaseErrorHandlerService.handle(e));
+      return Left(supabaseErrorHandlerService.handleError(e));
     }
   }
 
@@ -135,7 +134,7 @@ class TransactionRepositoryImpl implements TransactionRepositoryContract {
       if (localResponse.isNotEmpty) {
         return Right(localResponse.map((e) => e.toEntity()).toList());
       }
-      return Left(supabaseErrorHandlerService.handle(e));
+      return Left(supabaseErrorHandlerService.handleError(e));
     }
   }
 
@@ -178,7 +177,7 @@ class TransactionRepositoryImpl implements TransactionRepositoryContract {
       return const Right(null);
     } catch (e) {
       printOutPut(e);
-      return Left(supabaseErrorHandlerService.handle(e));
+      return Left(supabaseErrorHandlerService.handleError(e));
     }
   }
 }

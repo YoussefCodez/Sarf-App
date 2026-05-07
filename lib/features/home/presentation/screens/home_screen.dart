@@ -50,9 +50,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ref
           .read(getTransactionProvider.notifier)
           .handleIntent(GetTransactionsIntent(limit: 5));
-      ref
-          .read(streakProvider.notifier)
-          .handleIntent(RecordCheckInIntent());
+      ref.read(streakProvider.notifier).handleIntent(RecordCheckInIntent());
     });
   }
 
@@ -113,19 +111,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ref
             .read(getTransactionProvider.notifier)
             .handleIntent(GetTransactionsIntent(limit: 5));
-        ref
-            .read(streakProvider.notifier)
-            .handleIntent(GetStreakIntent());
+        ref.read(streakProvider.notifier).handleIntent(GetStreakIntent());
       },
       child: Scaffold(
         appBar: AppBar(
-          // leading: Padding(
-          //   padding: REdgeInsets.all(8.0),
-          //   child: CircleAvatar(
-          //     backgroundColor: AppColors.greyIconBackgroundColor,
-          //     child: Icon(Icons.person, color: AppColors.whiteColor, size: 20.sp),
-          //   ),
-          // ),
           title: Text(
             HomeStrings.sarf,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
@@ -134,6 +123,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
           titleSpacing: 20.w,
+          actionsPadding: REdgeInsets.only(right: 16),
           actions: [
             Consumer(
               builder: (context, ref, child) {
@@ -153,7 +143,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: AppColors.secondaryColor,
                         fontSize: 20.sp,
-                        fontStyle: FontStyle.italic,
                       ),
                     ),
                     Gap(4.w),
@@ -165,16 +154,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ],
                 );
               },
-            ),
-            IconButton(
-              onPressed: () {
-                //TODO: Navigate to notifications screen
-              },
-              icon: Icon(
-                Icons.notifications,
-                color: AppColors.whiteColor,
-                size: 24.sp,
-              ),
             ),
           ],
         ),

@@ -270,12 +270,12 @@ class MockSupabaseErrorHandlerService extends _i1.Mock
   }
 
   @override
-  String handle(Object? e) =>
+  String handleError(Object? e) =>
       (super.noSuchMethod(
-            Invocation.method(#handle, [e]),
+            Invocation.method(#handleError, [e]),
             returnValue: _i6.dummyValue<String>(
               this,
-              Invocation.method(#handle, [e]),
+              Invocation.method(#handleError, [e]),
             ),
           )
           as String);
