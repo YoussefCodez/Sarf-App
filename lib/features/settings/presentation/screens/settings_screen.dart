@@ -22,7 +22,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(authNotifierProvider, (previous, next) {
       if (next is LogoutSuccess) {
-        context.go("${AppRoutes.loginScreen}?backToSignUp=false");
+        context.go(AppRoutes.loginScreen);
       } else if (next is LogoutError) {
         CustomToast.show(
           context: context,

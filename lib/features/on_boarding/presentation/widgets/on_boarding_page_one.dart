@@ -136,8 +136,7 @@ class _OnBoardingPageOneState extends State<OnBoardingPageOne> {
                 ),
                 onPressed: () {
                   context.go(
-                    AppRoutes.loginScreen,
-                    extra: {'backToSignUp': 'false'},
+                    "${AppRoutes.loginScreen}?backToSignUp=false",
                   );
                 },
                 child: Text(
