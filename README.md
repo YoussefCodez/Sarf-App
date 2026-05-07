@@ -94,6 +94,13 @@ The project follows **Clean Architecture** principles to ensure maintainability,
 
 ## 📱 Screenshots
 
+<img width="1920" height="1080" alt="sarf1" src="https://github.com/user-attachments/assets/6ba25caf-d862-421c-b8d0-8ee7e4da7ae8" />
+<img width="1920" height="1080" alt="sarf2" src="https://github.com/user-attachments/assets/d9fe86b2-c0f1-4771-bbbf-ae2f878ed6ec" />
+<img width="1920" height="1080" alt="sarf3" src="https://github.com/user-attachments/assets/265216e2-5d0c-4ef1-ab82-517b9421dae1" />
+<img width="1920" height="1080" alt="sarf4" src="https://github.com/user-attachments/assets/d6e95a65-e692-4f12-add3-a3d5b83fb833" />
+<img width="1920" height="1080" alt="sarf5" src="https://github.com/user-attachments/assets/d25d00fe-db8b-464f-a839-0e9232a3f1d3" />
+<img width="1920" height="1080" alt="sarf6" src="https://github.com/user-attachments/assets/8bb9f9e6-ba00-4d13-88c1-df6863b32c59" />
+<img width="1920" height="1080" alt="sarf7" src="https://github.com/user-attachments/assets/94d41a7e-c71d-4084-a595-edbcfae4fe27" />
 
 
 ---
