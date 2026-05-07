@@ -62,8 +62,6 @@ class ProfileHeader extends ConsumerWidget {
                   color: AppColors.hintTextColor,
                   fontSize: 12.sp,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

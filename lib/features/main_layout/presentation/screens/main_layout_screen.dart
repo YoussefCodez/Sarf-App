@@ -1,4 +1,5 @@
 import 'package:finance_tracking/core/app_strings/biometrics_strings.dart';
+import 'package:finance_tracking/features/analytics/presentation/screens/analytics_screen.dart';
 import 'package:finance_tracking/features/home/presentation/screens/home_screen.dart';
 import 'package:finance_tracking/features/security_and_biometrics/presentation/view/intents/biometrics_intents.dart';
 import 'package:finance_tracking/features/security_and_biometrics/presentation/view/providers/biometrics_provider.dart';
@@ -96,12 +97,7 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen>
             index: _currentIndex,
             children: [
               HomeScreen(shortcut: widget.shortcut),
-              const Center(
-                child: Text(
-                  "Transactions",
-                  style: TextStyle(color: Colors.white, fontSize: 24),
-                ),
-              ),
+              const AnalyticsScreen(),
               const SizedBox.shrink(),
               const Center(
                 child: Text(

@@ -16,28 +16,30 @@ class TransactionLocalDataSourceImpl implements TransactionLocalDataSource {
   TransactionLocalDataSourceImpl(this._hive);
 
   @override
-  Future<void> saveTransactions(List<LocalTransactionModel> transactions) async {
-    final box = await _hive.openBox(_boxName);
+  Future<void> saveTransactions(
+    List<LocalTransactionModel> transactions,
+  ) async {
+    final box = _hive.box(_boxName);
     final data = {for (var tx in transactions) tx.id: tx};
     await box.putAll(data);
   }
 
   Future<void> saveTransaction(LocalTransactionModel transaction) async {
-    final box = await _hive.openBox(_boxName);
+    final box = _hive.box(_boxName);
     await box.put(transaction.id, transaction);
   }
 
   @override
   Future<List<LocalTransactionModel>> getTransactions({int? limit}) async {
-    final box = await _hive.openBox(_boxName);
+    final box = _hive.box(_boxName);
     final transactions = box.values.cast<LocalTransactionModel>().toList();
-    transactions.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    transactions.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return transactions.take(limit ?? transactions.length).toList();
   }
 
   @override
   Future<void> clearTransactions() async {
-    final box = await _hive.openBox(_boxName);
+    final box = _hive.box(_boxName);
     await box.clear();
   }
 }

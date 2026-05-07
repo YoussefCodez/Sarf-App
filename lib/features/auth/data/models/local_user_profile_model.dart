@@ -19,7 +19,13 @@ class LocalUserProfileModel extends HiveObject with EquatableMixin {
   @HiveField(5)
   final DateTime createdAt;
   @HiveField(6, defaultValue: "0")
-  final String currentMoney; 
+  final String currentMoney;
+  @HiveField(7, defaultValue: 0)
+  final int currentStreak;
+  @HiveField(8, defaultValue: 0)
+  final int longestStreak;
+  @HiveField(9)
+  final DateTime? lastCheckInDate;
 
   LocalUserProfileModel({
     required this.id,
@@ -29,6 +35,9 @@ class LocalUserProfileModel extends HiveObject with EquatableMixin {
     required this.forGoal,
     required this.createdAt,
     required this.currentMoney,
+    this.currentStreak = 0,
+    this.longestStreak = 0,
+    this.lastCheckInDate,
   });
 
   factory LocalUserProfileModel.fromEntity(UserProfileEntity entity) {
@@ -40,6 +49,9 @@ class LocalUserProfileModel extends HiveObject with EquatableMixin {
       forGoal: entity.forGoal,
       createdAt: entity.createdAt,
       currentMoney: entity.currentMoney,
+      currentStreak: entity.currentStreak,
+      longestStreak: entity.longestStreak,
+      lastCheckInDate: entity.lastCheckInDate,
     );
   }
 
@@ -52,6 +64,9 @@ class LocalUserProfileModel extends HiveObject with EquatableMixin {
       forGoal: forGoal,
       createdAt: createdAt,
       currentMoney: currentMoney,
+      currentStreak: currentStreak,
+      longestStreak: longestStreak,
+      lastCheckInDate: lastCheckInDate,
     );
   }
 
@@ -63,6 +78,9 @@ class LocalUserProfileModel extends HiveObject with EquatableMixin {
     bool? forGoal,
     DateTime? createdAt,
     String? currentMoney,
+    int? currentStreak,
+    int? longestStreak,
+    DateTime? lastCheckInDate,
   }) {
     return LocalUserProfileModel(
       id: id ?? this.id,
@@ -72,9 +90,12 @@ class LocalUserProfileModel extends HiveObject with EquatableMixin {
       forGoal: forGoal ?? this.forGoal,
       createdAt: createdAt ?? this.createdAt,
       currentMoney: currentMoney ?? this.currentMoney,
+      currentStreak: currentStreak ?? this.currentStreak,
+      longestStreak: longestStreak ?? this.longestStreak,
+      lastCheckInDate: lastCheckInDate ?? this.lastCheckInDate,
     );
   }
 
   @override
-  List<Object?> get props => [id, name, email, weeklySpending, forGoal, createdAt, currentMoney];
+  List<Object?> get props => [id, name, email, weeklySpending, forGoal, createdAt, currentMoney, currentStreak, longestStreak, lastCheckInDate];
 }

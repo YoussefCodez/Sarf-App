@@ -24,13 +24,16 @@ class LocalUserProfileModelAdapter extends TypeAdapter<LocalUserProfileModel> {
       forGoal: fields[4] as bool,
       createdAt: fields[5] as DateTime,
       currentMoney: fields[6] == null ? '0' : fields[6] as String,
+      currentStreak: fields[7] == null ? 0 : (fields[7] as num).toInt(),
+      longestStreak: fields[8] == null ? 0 : (fields[8] as num).toInt(),
+      lastCheckInDate: fields[9] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, LocalUserProfileModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -44,7 +47,13 @@ class LocalUserProfileModelAdapter extends TypeAdapter<LocalUserProfileModel> {
       ..writeByte(5)
       ..write(obj.createdAt)
       ..writeByte(6)
-      ..write(obj.currentMoney);
+      ..write(obj.currentMoney)
+      ..writeByte(7)
+      ..write(obj.currentStreak)
+      ..writeByte(8)
+      ..write(obj.longestStreak)
+      ..writeByte(9)
+      ..write(obj.lastCheckInDate);
   }
 
   @override

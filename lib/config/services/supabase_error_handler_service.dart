@@ -15,7 +15,7 @@ class SupabaseErrorHandlerService {
         case 'invalid_credentials':
           return AppStrings.wrongPassword;
         case 'email_not_confirmed':
-          return "Please confirm your email first.";
+          return AppStrings.emailNotConfirmed;
         default:
           return e.message;
       }
@@ -23,19 +23,19 @@ class SupabaseErrorHandlerService {
       // Handling Supabase Database Operations (Insert, Select, Delete, Update)
       switch (e.code) {
         case '23505': // unique_violation
-          return "This record already exists in the database.";
+          return AppStrings.recordAlreadyExists;
         case '23503': // foreign_key_violation
-          return "Referenced data not found. Please try again.";
+          return AppStrings.referencedDataNotFound;
         case '23502': // not_null_violation
-          return "Please fill in all required fields.";
+          return AppStrings.missingRequiredFields;
         case '42P01': // undefined_table
-          return "Database table not found. Please contact support.";
+          return AppStrings.tableNotFound;
         case 'PGRST116': // Single row expected but 0 rows returned
-          return "No record found matching the criteria.";
+          return AppStrings.noRecordFound;
         case 'PGRST204': // Column not found
-          return "Internal database error. Please contact support.";
+          return AppStrings.internalDbError;
         case '42501': // insufficient_privilege / RLS violation
-          return "You do not have permission to perform this action.";
+          return AppStrings.permissionDenied;
         default:
           return e.message;
       }

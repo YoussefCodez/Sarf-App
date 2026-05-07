@@ -34,10 +34,10 @@ class TransactionRepositoryImpl implements TransactionRepositoryContract {
     final profile = await authLocalDataSource.getUserProfile();
     if (profile != null) {
       final double currentMoney = double.tryParse(profile.currentMoney) ?? 0.0;
-      final double newMoney = type.toLowerCase() == 'income' 
-          ? currentMoney + amount 
+      final double newMoney = type.toLowerCase() == 'income'
+          ? currentMoney + amount
           : currentMoney - amount;
-      
+
       await authLocalDataSource.saveUserProfile(
         profile.copyWith(currentMoney: newMoney.toString()),
       );

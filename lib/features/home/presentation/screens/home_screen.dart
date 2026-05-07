@@ -14,6 +14,9 @@ import 'package:finance_tracking/features/home/presentation/widgets/home_transac
 import 'package:finance_tracking/features/home/presentation/widgets/home_transaction_header.dart';
 import 'package:finance_tracking/features/home/presentation/widgets/no_goal_overview_widget.dart';
 import 'package:finance_tracking/core/widgets/custom_toast.dart';
+import 'package:finance_tracking/features/streak/presentation/view/intents/streak_intents.dart';
+import 'package:finance_tracking/features/streak/presentation/view/providers/streak_providers.dart';
+import 'package:finance_tracking/features/streak/presentation/view/states/streak_states.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/intents/transaction_intents.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/providers/transaction_providers.dart';
 import 'package:finance_tracking/features/transaction/presentation/view/states/add_transaction_state.dart';
@@ -38,13 +41,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    Future.microtask(() {
       _handleShortcut();
-      ref.read(getProfileProvider.notifier).handleIntent(GetProfileIntentImpl());
+      ref
+          .read(getProfileProvider.notifier)
+          .handleIntent(GetProfileIntentImpl());
       ref.read(getGoalProvider.notifier).handleIntent(GetGoalIntentImpl());
       ref
           .read(getTransactionProvider.notifier)
           .handleIntent(GetTransactionsIntent(limit: 5));
+      ref
+          .read(streakProvider.notifier)
+          .handleIntent(RecordCheckInIntent());
     });
   }
 
@@ -52,7 +60,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void didUpdateWidget(covariant HomeScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.shortcut && !oldWidget.shortcut) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.microtask(() {
         _handleShortcut();
       });
     }
@@ -105,6 +113,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ref
             .read(getTransactionProvider.notifier)
             .handleIntent(GetTransactionsIntent(limit: 5));
+        ref
+            .read(streakProvider.notifier)
+            .handleIntent(GetStreakIntent());
       },
       child: Scaffold(
         appBar: AppBar(
@@ -124,25 +135,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           titleSpacing: 20.w,
           actions: [
-            Row(
-              mainAxisAlignment: .center,
-              children: [
-                Text(
-                  "3",
-                  textAlign: .center,
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: AppColors.secondaryColor,
-                    fontSize: 20.sp,
-                    fontStyle: .italic,
-                  ),
-                ),
-                Gap(4.w),
-                Icon(
-                  Icons.local_fire_department,
-                  color: AppColors.secondaryColor,
-                  size: 24.sp,
-                ),
-              ],
+            Consumer(
+              builder: (context, ref, child) {
+                final streakState = ref.watch(streakProvider);
+                final int streakCount;
+                if (streakState is StreakSuccess) {
+                  streakCount = streakState.streak.currentStreak;
+                } else {
+                  streakCount = 0;
+                }
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "$streakCount",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: AppColors.secondaryColor,
+                        fontSize: 20.sp,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                    Gap(4.w),
+                    Icon(
+                      Icons.local_fire_department,
+                      color: AppColors.secondaryColor,
+                      size: 24.sp,
+                    ),
+                  ],
+                );
+              },
             ),
             IconButton(
               onPressed: () {
@@ -188,11 +210,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               .fadeIn(
                                 delay: Duration(milliseconds: 200),
                                 duration: Duration(milliseconds: 600),
-                          )
-                          .slideY(
-                            begin: 0.1,
-                            duration: Duration(milliseconds: 600),
-                          );
+                              )
+                              .slideY(
+                                begin: 0.1,
+                                duration: Duration(milliseconds: 600),
+                              );
                         } else if (goalState is GetGoalNull) {
                           return const NoGoalOverviewWidget()
                               .animate()
@@ -216,7 +238,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         return InfoCard(
                           title: "Advice",
                           subTitle: advice,
-                          bgColor: AppColors.primaryColor.withValues(alpha: 0.2),
+                          bgColor: AppColors.primaryColor.withValues(
+                            alpha: 0.2,
+                          ),
                           svgPath: AppSvgs.lamp,
                           iconBgColor: AppColors.primaryColor,
                           textColor: AppColors.whiteColor,

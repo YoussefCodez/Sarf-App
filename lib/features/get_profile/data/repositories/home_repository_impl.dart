@@ -27,7 +27,7 @@ class HomeRepositoryImpl implements HomeRepositoryContract {
       final isOnline = await networkInfo.isConnected;
       if (isOnline) {
         final profile = await remoteHomeDataSource.getProfile();
-        final localProfile = LocalUserProfileModel.fromEntity(profile);
+        final localProfile = LocalUserProfileModel.fromEntity(profile.toEntity());
         await authLocalDataSource.saveUserProfile(localProfile);
         return Right(profile.toEntity());
       } else {

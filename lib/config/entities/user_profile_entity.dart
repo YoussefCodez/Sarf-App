@@ -8,7 +8,9 @@ class UserProfileEntity extends Equatable {
   final bool forGoal;
   final String currentMoney;
   final DateTime createdAt;
-  
+  final int currentStreak;
+  final int longestStreak;
+  final DateTime? lastCheckInDate;
   const UserProfileEntity({
     required this.id,
     required this.name,
@@ -17,6 +19,9 @@ class UserProfileEntity extends Equatable {
     required this.forGoal,
     required this.currentMoney,
     required this.createdAt,
+    this.currentStreak = 0,
+    this.longestStreak = 0,
+    this.lastCheckInDate,
   });
 
   UserProfileEntity copyWith({
@@ -27,6 +32,9 @@ class UserProfileEntity extends Equatable {
     bool? forGoal,
     String? currentMoney,
     DateTime? createdAt,
+    int? currentStreak,
+    int? longestStreak,
+    DateTime? lastCheckInDate,
   }) {
     return UserProfileEntity(
       id: id ?? this.id,
@@ -36,9 +44,23 @@ class UserProfileEntity extends Equatable {
       forGoal: forGoal ?? this.forGoal,
       currentMoney: currentMoney ?? this.currentMoney,
       createdAt: createdAt ?? this.createdAt,
+      currentStreak: currentStreak ?? this.currentStreak,
+      longestStreak: longestStreak ?? this.longestStreak,
+      lastCheckInDate: lastCheckInDate ?? this.lastCheckInDate,
     );
   }
 
   @override
-  List<Object?> get props => [id, name, email, weeklySpending, forGoal, currentMoney, createdAt];
+  List<Object?> get props => [
+    id,
+    name,
+    email,
+    weeklySpending,
+    forGoal,
+    currentMoney,
+    createdAt,
+    currentStreak,
+    longestStreak,
+    lastCheckInDate,
+  ];
 }

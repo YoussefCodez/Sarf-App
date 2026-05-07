@@ -52,7 +52,7 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
         );
 
         await localDataSource.saveUserProfile(
-          LocalUserProfileModel.fromEntity(updatedProfile),
+          LocalUserProfileModel.fromEntity(updatedProfile.toEntity()),
         );
 
         if (goalModel != null) {
@@ -122,7 +122,7 @@ class AuthRepositoryImpl implements AuthRepositoryContract {
       final remoteProfile = RemoteUserProfileModel.fromSupabase(profileData);
 
       await localDataSource.saveUserProfile(
-        LocalUserProfileModel.fromEntity(remoteProfile),
+        LocalUserProfileModel.fromEntity(remoteProfile.toEntity()),
       );
 
       return Right(AuthUserModel.fromSupabase(response.user!.toJson()));

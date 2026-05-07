@@ -85,6 +85,18 @@ import '../../features/security_and_biometrics/domain/usecases/get_biometrics_st
     as _i88;
 import '../../features/security_and_biometrics/domain/usecases/set_biometrics_enabled_usecase.dart'
     as _i87;
+import '../../features/streak/data/data_source/streak_local_data_source.dart'
+    as _i746;
+import '../../features/streak/data/data_source/streak_remote_data_source.dart'
+    as _i979;
+import '../../features/streak/data/repositories/streak_repository_impl.dart'
+    as _i857;
+import '../../features/streak/domain/repositories/streak_repository_contract.dart'
+    as _i401;
+import '../../features/streak/domain/use_cases/get_streak_usecase.dart'
+    as _i842;
+import '../../features/streak/domain/use_cases/record_check_in_usecase.dart'
+    as _i234;
 import '../../features/transaction/data/data_source/transaction_local_data_source.dart'
     as _i215;
 import '../../features/transaction/data/data_source/transaction_remote_data_source.dart'
@@ -125,13 +137,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i38.SupabaseErrorHandlerService>(
       () => _i38.SupabaseErrorHandlerService(),
     );
-    gh.lazySingleton<_i886.BiometricsLocalDataSource>(
-      () => _i886.BiometricsLocalDataSourceImpl(),
-    );
     gh.lazySingleton<_i400.BiometricsPlatformDataSource>(
       () => _i400.BiometricsPlatformDataSourceImpl(
         auth: gh<_i152.LocalAuthentication>(),
       ),
+    );
+    gh.lazySingleton<_i886.BiometricsLocalDataSource>(
+      () => _i886.BiometricsLocalDataSourceImpl(),
     );
     gh.lazySingleton<_i216.BiometricsRepositoryContract>(
       () => _i669.BiometricsRepositoryImpl(
@@ -151,6 +163,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i190.RemoteHomeDataSource>(
       () => _i190.RemoteHomeDataSource(
+        supabaseClient: gh<_i454.SupabaseClient>(),
+      ),
+    );
+    gh.lazySingleton<_i979.StreakRemoteDataSource>(
+      () => _i979.StreakRemoteDataSource(
         supabaseClient: gh<_i454.SupabaseClient>(),
       ),
     );
@@ -246,6 +263,9 @@ extension GetItInjectableX on _i174.GetIt {
         goalRepositoryContract: gh<_i456.GoalRepositoryContract>(),
       ),
     );
+    gh.lazySingleton<_i746.StreakLocalDataSource>(
+      () => _i746.StreakLocalDataSourceImpl(gh<_i280.AuthLocalDataSource>()),
+    );
     gh.lazySingleton<_i266.TransactionRepositoryContract>(
       () => _i600.TransactionRepositoryImpl(
         remoteDataSource: gh<_i88.TransactionRemoteDataSource>(),
@@ -292,6 +312,24 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i322.SignupUsecase>(
       () => _i322.SignupUsecase(
         authRepositoryContract: gh<_i273.AuthRepositoryContract>(),
+      ),
+    );
+    gh.lazySingleton<_i401.StreakRepositoryContract>(
+      () => _i857.StreakRepositoryImpl(
+        remoteDataSource: gh<_i979.StreakRemoteDataSource>(),
+        localDataSource: gh<_i746.StreakLocalDataSource>(),
+        supabaseErrorHandlerService: gh<_i38.SupabaseErrorHandlerService>(),
+        networkInfo: gh<_i236.NetworkInfo>(),
+      ),
+    );
+    gh.lazySingleton<_i842.GetStreakUseCase>(
+      () => _i842.GetStreakUseCase(
+        repository: gh<_i401.StreakRepositoryContract>(),
+      ),
+    );
+    gh.lazySingleton<_i234.RecordCheckInUseCase>(
+      () => _i234.RecordCheckInUseCase(
+        repository: gh<_i401.StreakRepositoryContract>(),
       ),
     );
     return this;

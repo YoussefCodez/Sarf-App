@@ -6,12 +6,14 @@ class HiveService {
   /// Initializes Hive and opens necessary boxes.
   static Future<void> init() async {
     await Hive.initFlutter();
-    
+
     // Register adapters via generated registrar
     Hive.registerAdapters();
-    
+
     // Open static boxes
     await Hive.openBox('settings_box');
     await Hive.openBox<PaymentCardModel>('payment_cards_box');
+    await Hive.openBox('user_profile_box');
+    await Hive.openBox('transaction_box');
   }
 }

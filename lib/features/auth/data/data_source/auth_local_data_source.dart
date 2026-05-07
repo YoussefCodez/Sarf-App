@@ -18,19 +18,19 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<void> saveUserProfile(LocalUserProfileModel userProfile) async {
-    final box = await _hive.openBox(_boxName);
+    final box = _hive.box(_boxName);
     await box.put(_userKey, userProfile);
   }
 
   @override
   Future<LocalUserProfileModel?> getUserProfile() async {
-    final box = await _hive.openBox(_boxName);
+    final box = _hive.box(_boxName);
     return box.get(_userKey);
   }
 
   @override
   Future<void> clearUserProfile() async {
-    final box = await _hive.openBox(_boxName);
+    final box = _hive.box(_boxName);
     await box.delete(_userKey);
   }
 }
