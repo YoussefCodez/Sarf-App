@@ -1,3 +1,4 @@
+import 'package:finance_tracking/core/app_config/notification_config.dart';
 import 'package:finance_tracking/core/app_strings/notification_strings.dart';
 import 'package:finance_tracking/features/notifications/data/datasources/notification_history_local_data_source.dart';
 import 'package:finance_tracking/features/notifications/data/models/local_notification_model.dart';
@@ -47,6 +48,54 @@ class NotificationService {
 
     await requestPermissions();
     await _runNotificationHistoryMigration();
+
+    _startScheduledNotificationListeners();
+  }
+
+  void _startScheduledNotificationListeners() {
+    _scheduleTimerForNotification(
+      NotificationConfig.morningHour,
+      NotificationConfig.morningMinute,
+      NotificationStrings.morningTitle,
+      NotificationStrings.morningBody,
+    );
+    _scheduleTimerForNotification(
+      NotificationConfig.eveningHour,
+      NotificationConfig.eveningMinute,
+      NotificationStrings.eveningTitle,
+      NotificationStrings.eveningBody,
+    );
+  }
+
+  void _scheduleTimerForNotification(
+    int hour,
+    int minute,
+    String title,
+    String body,
+  ) {
+    final now = DateTime.now();
+    final scheduledDate = _nextInstanceOfTime(hour, minute);
+    final duration = scheduledDate.difference(now);
+
+    if (duration.inMinutes < 1440) {
+      Future.delayed(duration, () async {
+        if (NotificationConfig.saveScheduledToHistory) {
+          final history = await _historyDataSource.getNotifications();
+          final alreadySavedToday = history.any(
+            (n) =>
+                n.title == title &&
+                n.sentAt.toLocal().year == scheduledDate.year &&
+                n.sentAt.toLocal().month == scheduledDate.month &&
+                n.sentAt.toLocal().day == scheduledDate.day,
+          );
+
+          if (!alreadySavedToday) {
+            await _saveNotificationToHistory(title: title, body: body);
+          }
+        }
+        _scheduleTimerForNotification(hour, minute, title, body);
+      });
+    }
   }
 
   Future<void> requestPermissions() async {
@@ -69,14 +118,15 @@ class NotificationService {
     required String body,
     String? payload,
   }) async {
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      NotificationStrings.generalChannelId,
-      NotificationStrings.generalChannelName,
-      channelDescription: NotificationStrings.generalChannelDesc,
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
-    );
+    const AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
+          NotificationStrings.generalChannelId,
+          NotificationStrings.generalChannelName,
+          channelDescription: NotificationStrings.generalChannelDesc,
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        );
 
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
       presentAlert: true,
@@ -107,11 +157,14 @@ class NotificationService {
     required int hour,
     required int minute,
   }) async {
+    final now = DateTime.now();
+    final scheduledDate = _nextInstanceOfTime(hour, minute);
+
     await _notificationsPlugin.zonedSchedule(
       id: id,
       title: title,
       body: body,
-      scheduledDate: _nextInstanceOfTime(hour, minute),
+      scheduledDate: scheduledDate,
       notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           NotificationStrings.dailyChannelId,
@@ -125,6 +178,24 @@ class NotificationService {
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
     );
+
+    if (NotificationConfig.saveScheduledToHistory) {
+      final history = await _historyDataSource.getNotifications();
+      final alreadySavedToday = history.any(
+        (n) =>
+            n.title == title &&
+            n.sentAt.toLocal().year == now.year &&
+            n.sentAt.toLocal().month == now.month &&
+            n.sentAt.toLocal().day == now.day,
+      );
+
+      final isPastTime =
+          now.hour > hour || (now.hour == hour && now.minute >= minute);
+
+      if (isPastTime && !alreadySavedToday) {
+        await _saveNotificationToHistory(title: title, body: body);
+      }
+    }
   }
 
   Future<void> cancelNotification(int id) async {
@@ -163,11 +234,17 @@ class NotificationService {
   Future<void> _runNotificationHistoryMigration() async {
     final settingsBox = _hive.box('settings_box');
     const migrationKey = 'notifications_history_migration_v1';
-    final alreadyMigrated = settingsBox.get(migrationKey, defaultValue: false) == true;
+    final alreadyMigrated =
+        settingsBox.get(migrationKey, defaultValue: false) == true;
     if (alreadyMigrated) return;
 
-    final notificationsBox = _hive.box(NotificationHistoryLocalDataSource.boxName);
-    await notificationsBox.put(NotificationHistoryLocalDataSource.key, <dynamic>[]);
+    final notificationsBox = _hive.box(
+      NotificationHistoryLocalDataSource.boxName,
+    );
+    await notificationsBox.put(
+      NotificationHistoryLocalDataSource.key,
+      <dynamic>[],
+    );
     await settingsBox.put(migrationKey, true);
   }
 }

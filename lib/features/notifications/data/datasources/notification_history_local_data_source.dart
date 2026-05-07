@@ -29,4 +29,15 @@ class NotificationHistoryLocalDataSource {
     list.insert(0, notification.toMap());
     await box.put(key, list);
   }
+
+  Stream<List<LocalNotificationModel>> watchNotifications() {
+    return hive.box(boxName).watch(key: key).map((event) {
+      final dynamic raw = event.value ?? <dynamic>[];
+      final List<dynamic> list = raw is List ? raw : <dynamic>[];
+      return list
+          .whereType<Map>()
+          .map((item) => LocalNotificationModel.fromMap(item))
+          .toList();
+    });
+  }
 }

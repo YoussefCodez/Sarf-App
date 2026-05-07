@@ -19,4 +19,11 @@ class NotificationHistoryRepositoryImpl implements NotificationHistoryRepository
       return Left('Failed to load notifications: ${e.toString()}');
     }
   }
+
+  @override
+  Stream<List<NotificationEntity>> watchNotifications() {
+    return localDataSource.watchNotifications().map(
+          (items) => items.map((e) => e.toEntity()).toList(),
+        );
+  }
 }

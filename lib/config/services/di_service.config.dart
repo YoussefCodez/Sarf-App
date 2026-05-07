@@ -83,6 +83,8 @@ import '../../features/notifications/domain/usecases/schedule_daily_evening_noti
     as _i263;
 import '../../features/notifications/domain/usecases/schedule_daily_morning_notification_use_case.dart'
     as _i530;
+import '../../features/notifications/domain/usecases/watch_notifications_use_case.dart'
+    as _i920;
 import '../../features/on_boarding/data/datasources/goal_local_datasource.dart'
     as _i428;
 import '../../features/on_boarding/data/datasources/on_boarding_local_datasource.dart'
@@ -343,6 +345,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i373.GetNotificationsUseCase>(
       () => _i373.GetNotificationsUseCase(
+        repository: gh<_i1029.NotificationHistoryRepository>(),
+      ),
+    );
+    gh.lazySingleton<_i920.WatchNotificationsUseCase>(
+      () => _i920.WatchNotificationsUseCase(
         repository: gh<_i1029.NotificationHistoryRepository>(),
       ),
     );

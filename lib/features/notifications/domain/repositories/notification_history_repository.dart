@@ -3,4 +3,5 @@ import 'package:finance_tracking/features/notifications/domain/entities/notifica
 
 abstract class NotificationHistoryRepository {
   Future<Either<String, List<NotificationEntity>>> getNotifications();
+  Stream<List<NotificationEntity>> watchNotifications();
 }

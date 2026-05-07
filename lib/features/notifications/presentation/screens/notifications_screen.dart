@@ -60,6 +60,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               }
 
               return RefreshIndicator(
+                color: AppColors.primaryColor,
                 onRefresh: () async {
                   await ref
                       .read(notificationHistoryProvider.notifier)
